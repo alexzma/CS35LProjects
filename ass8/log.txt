@@ -1,0 +1,78 @@
+First, I plugged in the BeagleBone.
+Then, I installed the drivers on my computer.
+To finish the installation, I used the command 
+"sudo rm -rf /System/Library/Extensions/HoRNDIS.kext" and restarted my 
+computer.
+
+After that, I used the command "sudo ssh root@192.168.7.2" to log into my 
+BeagleBone.
+Then, I opened the connmanctl terminal with the command "connmanctl"
+Then, I ran the command "enable wifi"
+That command allows the BeagleBone to connect to wifi networks.
+Then, I used the command "scan wifi" so the BeagleBone would look for wifi networks.
+I ran the command "services" to list all the wifi networks the BeagleBone found.
+I used the command "connect wifi_506583d4fc5e_544e434150413937414239_managed_psk"
+to connect to the class wifi.
+When the passphrase request came, I entered the password "3760ClassNet"
+After that, I quit the terminal with the command "quit"
+
+Then, I ran the commands "sudo apt-get update", "sudo apt-get install xauth", 
+"sudo apt-get install xvfb", and "sudo apt-get install firefox-esr-l10n-en-gb".
+Those commands updated the software, installed xauth, installed xvfb, and installed firefox, respectively.
+
+I also used the command "nano /etc/ssh/ssh_config" to edit the file /etc/ssh/ssh_config
+In that file, I changed the ForwardAgent and ForwardX11 fields to yes.
+I used the command "nano /etc/ssh/sshd_config" to edit the file /etc/ssh/sshd_config
+In that file, I changed the X11Forwarding field to yes.
+These changes allowed my BeagleBone to use X11 Forwarding
+
+I checked if my BeagleBone had OpenSSH with the command 
+"dpkg --get-selections | grep openssh"
+It output:
+openssh-client
+openssh-server
+openssh-sftp-server
+
+This means that openssh was installed.
+
+After this, I set up my server.
+First, I used the command "ssh-keygen" to create keys.
+I input a phrase to help the key generate.
+
+Note: the username, directory name, and password in the next two sections are 
+not actually "username", "dirname", and "password"
+
+Then, I made the client account directory with the command "sudo useradd -d /home/dirname -m username"
+I set the password with the command "sudo passwd password"
+I entered the client's directory with the command "cd /home/dirname"
+I made the .ssh directory with the command "sudo mkdir .ssh"
+I changed the ownership of the .ssh directory with the command
+"sudo chown -R username .ssh"
+This changes the owner of .ssh to username
+I changed the permission of the .ssh directory with the command
+"sudo chmod 700 .ssh"
+This gives the owner of the directory read, write, and execute permissions.
+
+After that, my partner Kayla logged into my server.
+First, she generated her own keys using the command "ssh-keygen" and entering 
+a phrase.
+Then, I used the command "ifconfig" to find my BeagleBone's IP address.
+My IP address was 10.97.85.122
+Then, she pinged my BeagleBone with the command "ping 10.97.85.122"
+That tested if my BeagleBone was on the same network.
+It was on the same network.
+Then, she copied her BeagleBone's public key to my BeagleBone with the command 
+"ssh-copy-id -i username@10.97.85.122"
+She entered her password.
+Then, she added her private key to the authentication agent with "ssh-add".
+She used the command "ssh -X username@10.97.85.122" to log into my server.
+She entered her password.
+
+Then, we tested if changes on my BeagleBone registered on Kayla's BeagleBone 
+and changes sent to my BeagleBone registered.
+I made a file named hi in her directory, and it showed up in Kayla's display 
+when she checked.
+Then, she made a file named people.txt in her directory, and it showed up in 
+my display when I checked.
+
+Then, she ran the command "firefox" and firefox opened on her computer.

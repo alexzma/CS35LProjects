@@ -1,0 +1,98 @@
+First, I used the shell command: sort -o words /usr/share/dict/words
+That command sorts the words in the file /usr/share/dict/words and puts the out
+put into a file called words.
+
+Then, I used the command curl -o lab.html http://web.cs.ucla.edu/classes/spring
+19/cs35L/assign/assign2.html
+That command copies the website with the URL into a file called lab.html.
+
+Then, I used the command tr -c 'A-Za-z' '[\n*]' < lab.html
+This command showed words, one per line, and many lines had no words. This is b
+ecause the tr function prints matches to the first argument and places a newlin
+e before it.
+
+Then, I used the command tr -cs 'A-Za-z' '[\n*]' < lab.html
+This command showed words, one per line. There was only one line with no words,
+ the first line. This is because the s in -cs removes duplicate new line charac
+ters from the output.
+
+Then, I used the command tr -cs 'A-Za-z' '[\n*]' < lab.html | sort
+This command is the same as the previous command, excpet that it is in sorted o
+rder due to the sort command.
+
+Then, I used the command tr -cs 'A-Za-z' '[\n*]' < lab.html | sort -u
+This command is the same as the previous command, except that the repeated word
+s are removed due to the -u tag on sort.
+
+Then, I used the command tr -cs 'A-Za-z' '[\n*]' < lab.html | sort -u | comm - 
+words
+This displays all the words in the file words in order, with the words that are
+ only in lab.html indented left of the rest of the words, the words that are in
+ both files indented right of the rest of the words, and the rest of the words 
+in the middle. The comm function compares the input with a given file and outpu
+t the described output.
+
+Then, I used the command tr -cs 'A-Za-z' '[\n*]' < lab.html| sort -u | comm -23
+ - words # ENGLISHCHECKER
+This displays the words that are in lab.html but not in words. The -23 tag spec
+ifies the output must only be from lab.html. ENGLISHCHECKER does not appear to 
+make a difference, because the output is the same if # ENGLISHCHECKER is remove
+d.
+
+I used the command wget https://www.mauimapp.com/moolelo/hwnwdshw.htm
+This command retrieved the html from the website and copied it into a file, whi
+ch is named hwnwdshw.htm
+
+I used the command sed "s/?//g" hwnwdshw.htm | sed "s/<u>//g" | sed "s/<\/u>//g
+" > step1 to remove all occurrences of ?, <u>, and </u> from the file and place
+ the remaining file into a file called step1.
+
+I used the command grep -i -E "\s*<td[^>]*>[pk\'\`mnwlhaeiou[:blank:]]+</td>\s*
+" < step1 > step2 to extract the lines of form "A<tdX>W</td>Z", where A and Z a
+re zero or more spaces, X contains no ">" characters, and W consists of entirel
+y Hawaiian characters or spaces, and then place the results into a file called 
+step2.
+
+I used the command sed "s/\`/\'/g" step2 | sed "s/<td[^>]*>//g" | sed "s/<\/td>
+//g" | tr 'A-Z' 'a-z' | sed "s/  //g" | sed "s/ /\n/g" | sort -u > hwords to re
+move all the characters except the words, convert the words to lower case, conv
+ert the ` to ', put one word per line, and sort the words.
+
+Then, I placed these commands in a shell script called buildwords.
+At the top of the shell script, I specified the shell as bash.
+I put the above commands into temporary variables, and specified no output, so 
+the output goes to standard output.
+This script has bugs. If there is an English word that consists entirely of Haw
+aiian letters, the English words are also included in the output.
+
+I created another shell script called HAWAIIANCHECKER.
+At the top of the shell script, I specified the shell as sh.
+First, I placed each sequence of ASCII letters or apostrophe in the input on it
+s own line with the command tr -cs "A-Za-z\'" '[\n*]' $input
+Then, I turned all the upper case letters to lower case with the command tr 'A-
+Z' 'a-z'
+Then, I sorted the words with the command sort -u
+Finally, I compared the words from the input with the words in the file hwords 
+with the command comm -23 - hwords
+I placed all the above commands on one line with pipe symbols between them.
+
+I used the command wget http://web.cs.ucla.edu/classes/spring19/cs35L/assign/as
+sign2.html
+This command retrieved the html of the webpage.
+I renamed the webpage to lab2.html using mv.
+
+The English checker reported 40 incorrectly spelled words in the webpage throug
+h the command tr -cs 'A-Za-z' '[\n*]' < lab2.html | tr 'A-Z' 'a-z' | sort -u | 
+comm -23 - words # ENGLISHCHECKER
+If you do not lower case the English checker, there are 84 incorrectly spelled 
+words, but the numbers I use in the rest of this log will use the prior number.
+The Hawaiian checker reported 492 incorrectly spelled words in the webpage thro
+ugh the command ./HAWAIIANCHECKER < lab2.html
+There are 4 words that are marked as mispelled by ENGLISHCHECKER and not marked
+ as mispelled by HAWAIIANCHECKER.
+There are 456 words that are marked as mispelled by HAWAIIANCHECKER and not mar
+ked as mispelled by ENGLISHCHECKER.
+Two words that HAWAIIANCHECKER marked as mispelled that ENGLISHCHECKER did not 
+mark as mispelled are "a" and "able".
+Two words that ENGLISHCHECKER marked as mispelled that HAWAIIANCHECKER did not 
+mark as mispelled are "lau" and "wiki".

@@ -1,0 +1,144 @@
+#!/bin/bash
+check_dir () {
+files="$(ls -A -1 $1 | sed "s/\.\///g" | grep -v "^\.$")"
+if [ -z "$files" ]
+then
+return
+fi
+#sed "s/[^:]*:$//g" < a.out > d.out
+#mv -f d.out a.out
+#sort -f -u < a.out > b.out
+sfiles="$(echo "$files" | sort -f -u )"
+#sort < b.out > c.out
+temp="$(echo "$sfiles" | sort )"
+#mv -f c.out b.out
+sfiles="$temp"
+#sort < a.out > c.out
+temp="$(echo "$files" | sort )"
+#mv -f c.out a.out
+files="$temp"
+#grep -E "[^A-Za-z\._\-]+" < a.out > c.out
+temp="$(echo "$files" | grep -E "[^A-Za-z\._\-]+")"
+#grep -E "^/-" < a.out | comm -23 - c.out >> c.out
+temp2="$(echo "$files" | grep -E "^\-" | comm -23 - <(echo "$temp"))"
+if [ -z $temp2 ]
+then
+temp2="$temp"
+else
+temp2="$temp
+""$temp2"
+fi
+temp="$temp2"
+#sort < c.out > d.out
+temp2="$(echo "$temp" | sort)"
+#mv -f d.out c.out
+temp="$temp2"
+#grep -E "\.[^\.]" < a.out | comm -23 - c.out >> c.out
+temp2="$(echo "$files" | grep -E "^\.[^\.]" | comm -23 - <(echo "$temp"))"
+if [ -z "$temp2" ]
+then
+temp2="$temp"
+else
+temp2="$temp
+""$temp2"
+fi
+temp="$temp2"
+#sort < c.out > d.out
+temp2="$(echo "$temp" | sort)"
+#mv -f d.out c.out
+temp="$temp2"
+#grep -E ".{15,}" < a.out | comm -23 - c.out >> c.out
+temp2="$(echo "$files" | grep -E ".{15,}" | comm -23 - <(echo "$temp"))"
+if [ -z "$temp2" ]
+then
+temp2="$temp"
+else
+temp2="$temp
+""$temp2"
+fi
+temp="$temp2"
+#sort < c.out > d.out
+temp2="$(echo "$temp" | sort )"
+#mv -f d.out c.out
+temp="$temp2"
+#comm -23 a.out b.out | comm -23 - c.out >> c.out
+temp2="$(comm -23 <(echo "$files") <(echo "$sfiles"))"
+temp3="$(grep -i -w -f <(echo "$temp2") <(echo "$files"))"
+temp4="$(comm -23 <(echo "$temp3") <(echo "$temp"))"
+if [ -z "$temp4" ]
+then
+temp4="$temp"
+else
+temp4="$temp
+""$temp4"
+fi
+temp="$temp4"
+#while read -u 10 mline
+#do
+#realpath -e $1/$mline
+#done 10<c.out
+while read mline
+do
+if [ -z "$mline" ]
+then
+continue
+fi
+echo $1/"$mline"
+done <<< "$temp"
+#while read -u 10  mline
+#do
+#if [ -d $1/$mline ]
+#then
+#if [ -z $mline ]
+#then
+#t=$1
+#else
+#check_dir $1/$mline
+#fi
+#fi
+#done 10<a.out
+#}
+while read mline
+do
+if [ -d $1/$mline ]
+then
+if [ -z $mline ]
+then
+t=$1
+else
+if [ -L $1/$mline ]
+then
+t=$1
+else
+check_dir $1/$mline
+fi
+fi
+fi
+done <<< "$files"
+}
+if [ -z $2 ];
+then
+t=$1
+else
+>&2 echo "Error: Only one argument can be input."
+exit 1
+fi
+first=$1
+if [ "-" = ${first:0:1} ]
+then
+>&2 echo "Error: Input directory can not start with a -."
+exit 1
+fi
+if [ -d $1 ]
+then
+t=$1
+else
+>&2 echo "Error: Input must be a directory."
+exit 1
+fi
+if [ -z $1 ];
+then
+check_dir "$(pwd)"
+else
+check_dir $1
+fi

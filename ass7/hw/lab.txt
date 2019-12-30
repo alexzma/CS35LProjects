@@ -1,0 +1,920 @@
+I imported the file simpgmp.c using the wget command.
+Then, I compiled the simpgmp.c file using the command "gcc -lgmp simpgmp.c"
+This compiled simpgmp.c into an executable called a.out
+
+Looking through the simpgmp.c source file, I learned that simpgmp.c took a 
+number as input, and output two to the power of that number.
+To test this, I used the command "./a.out 24 >test"
+I opened the test file with emacs and the number was  16777216, which is two 
+the power of 24, as expected.
+
+Then, I used the command "./a.out 2**24 > test2"
+This cause an error, because the code takes in arguments as characters, so it 
+interpreted 2**24 as characters rather than a number.
+So I used the command "./a.out $((2**24)) > test2"
+This calculated the number two the power of 24 before inputting the value into 
+the executable, so the program received it as the number.
+I opened the test2 file with emacs and the number output started with the 
+digits 1818 and ended with the digits 7536, and had 5050446 digits, so it is 
+probably correct as well.
+
+I ran the command "ldd a.out" to see which dynamic libraries the program uses.
+The program uses the libraries "linux-vdso.so.1", "libgmp.so.10", "libc.so.6", 
+and "/lib64/ld-linux-x86-64.so.2".
+
+I ran the command "strace ./a.out 24"
+The first system call was execve. It was not related to a dynamic library.
+The next call, brk, was also not related to a dynamic library.
+mmap was not related to a dynamic library.
+access used the dynamic library "/etc/ld.so.preload" as the file to access, 
+though it returned a file not found error.
+
+The next command, open, used the dynamic library "/etc/ld.so.cache" as the file
+ to open, and the open succeeded.
+The next few calls (fstat, mmap, and close) were operated on the same library 
+file.
+fstat checks the characteristics of the file.
+mmap maps the file into memory.
+close closes the file from reading.
+
+Then, open was called on the library "/lib64/libgmp.so.10" successfully.
+The next calls (read, fstat, mmap, mprotect, mmap, and close) were operated on 
+the same library file.
+read reads the file into memory
+fstat checks the characteristics of the file
+mmap maps the file into memory
+mprotect specifies the protection level of the memory. In this case, the 
+PROT_NONE argument was passed, so no access for the memory is allowed. This is
+ probably to protect from buffer overflow
+mmap maps more of the file into memory
+close closes the file from reading
+
+Then, open was called on the library "/lib64/libc.so.6" successfully.
+The next calls (read, fstat, mmap, mprotect, mmap, mmap, and close) were 
+operated on the same library file.
+read reads the file into memory
+fstat checks the characteristics of the file
+mmap maps the file into memory
+mprotect specifies the protection level of the memory. In this case, the 
+PROT_NONE argument was passed, so no access for the memory is allowed. This is
+ probably to protect from buffer overflow
+The next two calls to mmap also write the file into memory
+close closes the file from reading
+
+Then, the rest of the functions (mmap, mmap, arch_prctl, mprotect, mprotect, 
+mprotect, mprotect, munmap, brk, brk, brk, fstat, mmap, write, exit_group) do 
+not relate to dynamic libraries.
+
+My student ID is 105093055
+Therefore, I ran the command "ls /usr/bin | awk 'NR%101==105093055%101'"
+The files from that list were:
+abs2rel
+batch
+chvt
+db_hotbackup
+easy_install
+fmtutil-sys
+gnome-keyring-3
+gtk-builder-tool
+ident
+jstest
+kpsewhere
+linguist-qt4
+mesg
+newgrp
+op-check-perfevents
+pdftohtml
+pmjson
+qdbus
+ruby
+slabtop
+systemd-hwdb
+tzselect
+wordlist2hunspell
+xvidtune
+
+I ran the command "ldd /usr/bin/abs2rel"
+I received the error: "not a dynamic executable"
+Using the command "strace /usr/bin/abs2rel", there were many libraries that 
+were not found (only one was found). This may have been the reason.
+
+I ran the command "ldd /usr/bin/batch"
+I received the error: "not a dynamic executable"
+I ran the command "strace /usr/bin/batch".
+Only one library was not found.
+
+I ran the command "ldd /usr/bin/chvt"
+It output the libraries: linux-vdso.so.1, libc.so.6, and /lib64/ld-linux-x86-64.so.2
+To compare with the commands that did not work, I ran the command "strace 
+/usr/bin/chvt"
+This also had many libraries not found, so libraries not found was not the 
+reason for the failure of the ldd command.
+
+I ran the command "ldd /usr/bin/db_hotbackup"
+It output the libraries: linux-vdso.so.1, libdb-5.3.so, libpthread.so.0, libc.so.6, and /lib64/ld-linux-x86-64.so.2
+
+I ran the command "ldd /usr/bin/easy_install"
+I received the error: "not a dynamic executable"
+
+I ran the command "ldd /usr/bin/fmtutil-sys"
+I received the error: "not a dynamic executable"
+
+I ran the command "ldd /usr/bin/gnome-keyring-3"
+It output the libraries: linux-vdso.so.1, libgcr-ui-3.so.1, libgtk-3.so.0, 
+libgdk-3.so.0 (this library was there twice), libatk-1.0.so.0, 
+libpangocairo-1.0.so.0, libgdk_pixbuf-2.0.so.0, libcairo-gobject.so.2, 
+libpango-1.0.so.0, libcairo.so.2, libgcr-base-3.so.1, libgck-1.so.0, 
+libgio-2.0.so.0, libp11-kit.so.0, libgobject-2.0.so.0, libglib-2.0.so.0, 
+libgcrypt.so.11, libdl.so.2, libgpg-error.so.0, libcap-ng.so.0, 
+libpthread.so.0, libc.so.6, libgmodule-2.0.so.0, libgthread-2.0.so.0, 
+libX11.so.6, libXi.so.6, libXfixes.so.3, libatk-bridge-2.0.so.0, 
+libwayland-client.so.0, libXext.so.6, librt.so.1, libfreetype.so.6, 
+libpng15.so.15, libpixman-1.so.0, libEGL.so.1, libxcb-shm.so.0, libxcb.so.1, 
+libxcb-render.so.0, libXrender.so.1, libz.so.1, libGL.so.1, libthai.so.0, 
+libfribidi.so.0, libffi.so.6, libpcre.so.1, libselinux.so.1, libresolv.so.2, 
+libmount.so.1, libgcc_s.so.1, libatspi.so.0, libdbus-1.so.3, libharfbuzz.so.0, 
+libexpat.so.1, libuuid.so.1, libbz2.so.1, libexpat.so.1, libuuid.so.1, 
+libbz2.so.1, libGLdispatch.so.0, libXau.so.6, libGLX.so.0, libblkid.so.1, 
+libsystemd.so.0, libgraphite2.so.3, libcap.so.2, liblzma.so.5, liblz4.so.1, 
+libdw.so.1, libattr.so.1, and libelf.so.1
+
+I ran the command "ldd /usr/bin/gtk-builder-tool"
+Looking at the number of libraries, I did not want to list them manually.
+Therefore, I wrote this script to help me format it:
+#!/bin/bash
+libs=""
+for arg in "$@"
+do
+temp=$(ldd "/usr/bin/$arg" | sed -r 's/^\s//g' | sed -r 's/ =.*/, /g' | sed -r 's/ \(.*/, /g' | tr -d '\n')
+libs="$libs$temp"
+done
+echo "$libs"
+
+The script was named dynamics.sh, and I ran the command 
+"./dynamics.sh gtk-builder-tool"
+It output the libraries: linux-vdso.so.1, libgtk-3.so.0, libgdk-3.so.0, 
+libgmodule-2.0.so.0, libXinerama.so.1, libXrandr.so.2, libXcursor.so.1, 
+libXext.so.6, librt.so.1, libpangocairo-1.0.so.0, libX11.so.6, libXi.so.6, 
+libXcomposite.so.1, libXdamage.so.1, libXfixes.so.3, libcairo-gobject.so.2, 
+libcairo.so.2, libgdk_pixbuf-2.0.so.0, libatk-1.0.so.0, libatk-bridge-2.0.so.0,
+ libxkbcommon.so.0, libwayland-cursor.so.0, libwayland-egl.so.1, 
+libwayland-client.so.0, libepoxy.so.0, libpangoft2-1.0.so.0, libpango-1.0.so.0,
+ libfontconfig.so.1, libfribidi.so.0, libfreetype.so.6, libgio-2.0.so.0, 
+libgobject-2.0.so.0, libglib-2.0.so.0, libm.so.6, libpthread.so.0, libc.so.6, 
+libdl.so.2, libpcre.so.1, libXrender.so.1, libxcb.so.1, libpixman-1.so.0, 
+libEGL.so.1, libpng15.so.15, libxcb-shm.so.0, libxcb-render.so.0, libz.so.1, 
+libGL.so.1, libatspi.so.0, libdbus-1.so.3, libffi.so.6, libharfbuzz.so.0, 
+libthai.so.0, libexpat.so.1, libuuid.so.1, libbz2.so.1, libselinux.so.1, 
+libresolv.so.2, libmount.so.1, libgcc_s.so.1, 
+/lib64/ld-linux-x86-64.so.2, libXau.so.6, libGLdispatch.so.0, libGLX.so.0, 
+libsystemd.so.0, libgraphite2.so.3, libblkid.so.1, libcap.so.2, liblzma.so.5, 
+liblz4.so.1, libgcrypt.so.11, libgpg-error.so.0, libdw.so.1, libattr.so.1, 
+and libelf.so.1
+
+I ran the command "./dynamics.sh ident"
+It output the libraries: linux-vdso.so.1, libc.so.6, and /lib64/ld-linux-x86-64.so.2
+
+I ran the command "./dynamics.sh jstest"
+It output the libraries: linux-vdso.so.1, libc.so.6, and /lib64/ld-linux-x86-64.so.2
+
+I ran the command "./dynamics.sh kpsewhere"
+I received the error: "not a dynamic executable"
+
+I ran the command "./dynamics.sh linguist-qt4"
+It output the libraries: linux-vdso.so.1, libQtXml.so.4, libQtGui.so.4, 
+libQtCore.so.4, libpthread.so.0, libstdc++.so.6, libm.so.6, libgcc_s.so.1, 
+libc.so.6, libgthread-2.0.so.0, libglib-2.0.so.0, libpng15.so.15, libz.so.1, 
+libfreetype.so.6, libgobject-2.0.so.0, libSM.so.6, libICE.so.6, libXi.so.6, 
+libXrender.so.1, libXrandr.so.2, libXfixes.so.3, libXcursor.so.1, 
+libXinerama.so.1, libfontconfig.so.1, libXext.so.6, libX11.so.6, libdl.so.2, 
+librt.so.1, /lib64/ld-linux-x86-64.so.2, libpcre.so.1, libbz2.so.1, 
+libffi.so.6, libuuid.so.1, libexpat.so.1, libxcb.so.1, and libXau.so.6
+
+I ran the command "./dynamics.sh mesg"
+It output the libraries: linux-vdso.so.1, libcrypt.so.1, libc.so.6, 
+libfreebl3.so, /lib64/ld-linux-x86-64.so.2, and libdl.so.2
+
+I ran the command "./dynamics.sh newgrp"
+It output the libraries: linux-vdso.so.1, libaudit.so.1, libcrypt.so.1, 
+libc.so.6, libcap-ng.so.0, libfreebl3.so, /lib64/ld-linux-x86-64.so.2, 
+and libdl.so.2
+
+I ran the command "./dynamics.sh op-check-perfevents"
+It output the libraries: linux-vdso.so.1, libpopt.so.0, libdl.so.2, libc.so.6, 
+and /lib64/ld-linux-x86-64.so.2
+
+I ran the command "./dynamics.sh pdftohtml"
+It output the libraries: linux-vdso.so.1, libpoppler.so.46, liblcms2.so.2, 
+libtiff.so.5, libjpeg.so.62, libpng15.so.15, libopenjpeg.so.1, 
+libfontconfig.so.1, libfreetype.so.6, libpthread.so.0, libstdc++.so.6, 
+libm.so.6, libgcc_s.so.1, libc.so.6, libjbig.so.2.0, libz.so.1, libexpat.so.1, 
+libuuid.so.1, libbz2.so.1, and /lib64/ld-linux-x86-64.so.2
+
+I ran the command "./dynamics.sh pmjson"
+It output the libraries: linux-vdso.so.1, libpcp_web.so.1, libpcp_pmda.so.3, 
+libpcp.so.3, libc.so.6, libm.so.6, libdl.so.2, libssl3.so, libnss3.so, 
+libnspr4.so, libsasl2.so.3, liblzma.so.5, libavahi-common.so.3, 
+libavahi-client.so.3, libpthread.so.0, /lib64/ld-linux-x86-64.so.2, 
+libnssutil3.so, libplc4.so, libplds4.so, librt.so.1, libresolv.so.2, 
+libcrypt.so.1, libgssapi_krb5.so.2, libkrb5.so.3, libk5crypto.so.3, 
+libcom_err.so.2, libkrb5support.so.0, libdbus-1.so.3, libfreebl3.so, 
+libkeyutils.so.1, libselinux.so.1, libsystemd.so.0, libpcre.so.1, libcap.so.2, 
+liblz4.so.1, libgcrypt.so.11, libgpg-error.so.0, libdw.so.1, libgcc_s.so.1, 
+libattr.so.1, libelf.so.1, libz.so.1, and libbz2.so.1
+
+I ran the command "./dynamics.sh qdbus"
+It output the libraries: linux-vdso.so.1, libQtDBus.so.4, libQtXml.so.4, 
+libQtCore.so.4, libpthread.so.0, libstdc++.so.6, libm.so.6, libgcc_s.so.1, 
+libc.so.6, libdbus-1.so.3, libz.so.1, libdl.so.2, libgthread-2.0.so.0, 
+libglib-2.0.so.0, librt.so.1, /lib64/ld-linux-x86-64.so.2, libsystemd.so.0, 
+libpcre.so.1, libcap.so.2, libselinux.so.1, liblzma.so.5, liblz4.so.1, 
+libgcrypt.so.11, libgpg-error.so.0, libresolv.so.2, libdw.so.1, libattr.so.1, 
+libelf.so.1, and libbz2.so.1
+
+I ran the command "./dynamics.sh ruby"
+It output the libraries: linux-vdso.so.1, libruby.so.2.0, libpthread.so.0, 
+librt.so.1, libdl.so.2, libcrypt.so.1, libm.so.6, libc.so.6, 
+/lib64/ld-linux-x86-64.so.2, and libfreebl3.so
+
+I ran the command "./dynamics.sh slabtop"
+It output the libraries: linux-vdso.so.1, libprocps.so.4, libsystemd.so.0, 
+libncurses.so.5, libtinfo.so.5, libdl.so.2, libc.so.6, libcap.so.2, libm.so.6, 
+librt.so.1, libselinux.so.1, liblzma.so.5, liblz4.so.1, libgcrypt.so.11, 
+libgpg-error.so.0, libresolv.so.2, libdw.so.1, libgcc_s.so.1, libpthread.so.0, 
+/lib64/ld-linux-x86-64.so.2, libattr.so.1, libpcre.so.1, libelf.so.1, 
+libz.so.1, and libbz2.so.1
+
+I ran the command "./dynamics.sh systemd-hwdb"
+It output the libraries: linux-vdso.so.1, libselinux.so.1, librt.so.1, 
+libgcc_s.so.1, libpthread.so.0, libc.so.6, /lib64/ld-linux-x86-64.so.2, 
+libpcre.so.1, and libdl.so.2
+
+I ran the command "./dynamics.sh tzselect"
+I received the error: "not a dynamic executable"
+
+I ran the command "./dynamics.sh wordlist2hunspell"
+I received the error: "not a dynamic executable"
+
+I ran the command "./dynamics.sh xvidtune"
+It output the libraries: linux-vdso.so.1, libXxf86vm.so.1, libXaw.so.7, 
+libXmu.so.6, libXt.so.6, libX11.so.6, libc.so.6, libXext.so.6, libXpm.so.4, 
+libSM.so.6, libICE.so.6, libxcb.so.1, libdl.so.2, /lib64/ld-linux-x86-64.so.2, 
+libuuid.so.1, and libXau.so.6
+
+I noticed that all successful ldd commands output the libraries 
+linux-vdso.so.1, /lib64/ld-linux-x86-64.so.2, and libc.so.6
+Therefore, I checked if the all the executables had all the libraries.
+Looking through each of the executables with strace, all the executables had 
+dynamic libraries from lib64 and had the libc.so.6 library. However, 
+linux-vdso.so.1 did not appear in any of the straces. The reason for this is 
+that linux-vdso.so.1 does not appear in strace outputs.
+Therefore, missing libraries were probably not the cause of the error.
+
+Then, I looked at ldd's man page. It said that it called ld.so with the 
+LD_TRACE_LOADED_OBJECTS variable set to 1 to find the library dependencies.
+I looked at the man page of ld.so
+The man page said that the command could be run by using the command 
+/lib/ld-linux.so.*
+I ran the command "/lib/ld-linux.so.* --list /usr/bin/abs2rel"
+This caused two errors: "error while loading shared libraries" and 
+"invalid ELF header"
+Then, I ran the command "/lib/ld-linux.so.* --list /usr/bin/chvt"
+This caused two errors: "error while loading shared libraries" and 
+"wrong ELF class: ELFCLASS64"
+Both the program on which ldd did not work and the program on which ldd worked 
+had errors. However, they had different errors.
+All executables on which ldd did not work had the error "invalid ELF header",
+and all executables on which ldd worked had the error "wrong ELF class: ELFCLASS64"
+From this, I concluded that the reason why ldd did not work is that they did 
+not have a valid ELF header. The ldd command probably used a different version 
+of the command I used to support ELFCLASS64, so ELFCLASS64 headers would work 
+with ldd.
+ELF stands for Executable and Linkable Format. The ldd command read the header 
+of the executable for the dynamic libraries, but if the header is not there or 
+in the wrong format, then the ldd command would fail.
+
+I changed my shell script to this to gain a sorted list of every dynamic 
+library used while omitting duplicates:
+#!/bin/bash
+libs=""
+for arg in "$@"
+do
+temp=$(ldd "/usr/bin/$arg" | sed -r 's/^\s//g' | sed -r 's/ =.*//g' | sed -r 's/ \(.*//g')
+libs="$libs$temp
+"
+done
+echo "$libs" | sed -r 's/not a dynamic executable//g' | sort -u
+
+This program takes all the dynamic libraries shown from the ldd command and 
+sorts them, removing duplicates.
+Then, I ran the command "./dynamics.sh abs2rel batch chvt db_hotbackup 
+easy_install fmtutil-sys gnome-keyring-3 gtk-builder-tool ident jstest 
+kpsewhere linguist-qt4 mesg newgrp op-check-perfevents pdftohtml pmjson qdbus
+ruby slabtop systemd-hwdb tzselect wordlist2hunspell xvidtune"
+
+I obtained these libraries:
+/lib64/ld-linux-x86-64.so.2
+libatk-1.0.so.0
+libatk-bridge-2.0.so.0
+libatspi.so.0
+libattr.so.1
+libaudit.so.1
+libavahi-client.so.3
+libavahi-common.so.3
+libblkid.so.1
+libbz2.so.1
+libcairo-gobject.so.2
+libcairo.so.2
+libcap-ng.so.0
+libcap.so.2
+libcom_err.so.2
+libcrypt.so.1
+libc.so.6
+libdb-5.3.so
+libdbus-1.so.3
+libdl.so.2
+libdw.so.1
+libEGL.so.1
+libelf.so.1
+libepoxy.so.0
+libexpat.so.1
+libffi.so.6
+libfontconfig.so.1
+libfreebl3.so
+libfreetype.so.6
+libfribidi.so.0
+libgcc_s.so.1
+libgck-1.so.0
+libgcr-base-3.so.1
+libgcr-ui-3.so.1
+libgcrypt.so.11
+libgdk-3.so.0
+libgdk_pixbuf-2.0.so.0
+libgio-2.0.so.0
+libGLdispatch.so.0
+libglib-2.0.so.0
+libGL.so.1
+libGLX.so.0
+libgmodule-2.0.so.0
+libgobject-2.0.so.0
+libgpg-error.so.0
+libgraphite2.so.3
+libgssapi_krb5.so.2
+libgthread-2.0.so.0
+libgtk-3.so.0
+libharfbuzz.so.0
+libICE.so.6
+libjbig.so.2.0
+libjpeg.so.62
+libk5crypto.so.3
+libkeyutils.so.1
+libkrb5.so.3
+libkrb5support.so.0
+liblcms2.so.2
+liblz4.so.1
+liblzma.so.5
+libmount.so.1
+libm.so.6
+libncurses.so.5
+libnspr4.so
+libnss3.so
+libnssutil3.so
+libopenjpeg.so.1
+libp11-kit.so.0
+libpango-1.0.so.0
+libpangocairo-1.0.so.0
+libpangoft2-1.0.so.0
+libpcp_pmda.so.3
+libpcp.so.3
+libpcp_web.so.1
+libpcre.so.1
+libpixman-1.so.0
+libplc4.so
+libplds4.so
+libpng15.so.15
+libpoppler.so.46
+libpopt.so.0
+libprocps.so.4
+libpthread.so.0
+libQtCore.so.4
+libQtDBus.so.4
+libQtGui.so.4
+libQtXml.so.4
+libresolv.so.2
+librt.so.1
+libruby.so.2.0
+libsasl2.so.3
+libselinux.so.1
+libSM.so.6
+libssl3.so
+libstdc++.so.6
+libsystemd.so.0
+libthai.so.0
+libtiff.so.5
+libtinfo.so.5
+libuuid.so.1
+libwayland-client.so.0
+libwayland-cursor.so.0
+libwayland-egl.so.1
+libX11.so.6
+libXau.so.6
+libXaw.so.7
+libxcb-render.so.0
+libxcb-shm.so.0
+libxcb.so.1
+libXcomposite.so.1
+libXcursor.so.1
+libXdamage.so.1
+libXext.so.6
+libXfixes.so.3
+libXinerama.so.1
+libXi.so.6
+libxkbcommon.so.0
+libXmu.so.6
+libXpm.so.4
+libXrandr.so.2
+libXrender.so.1
+libXt.so.6
+libXxf86vm.so.1
+libz.so.1
+linux-vdso.so.1
+
+Then, I remembered that the dynamic libraries in the executables for which ldd 
+did not work were not included on this list, because their libraries do not 
+display from ldd.
+In case these libraries were wanted, I wrote this script called mmmm.sh:
+#!/bin/bash
+for arg in "$@"
+do
+strace "/usr/bin/$arg" 2>&1 | grep -o -E '\/[^\/]*\.so.*\"' | tr -d '\/\"' >> output
+echo "
+" >> output
+done
+sort -u output | grep -v "^$" >output2
+
+This program takes extracts the shared object file names from strace and sorts 
+them, removing duplicates.
+Then, I ran the command "./mmmm.sh abs2rel batch chvt db_hotbackup
+easy_install fmtutil-sys gnome-keyring-3 gtk-builder-tool ident jstest
+kpsewhere linguist-qt4 mesg newgrp op-check-perfevents pdftohtml pmjson qdbus
+ruby slabtop systemd-hwdb tzselect wordlist2hunspell xvidtune"
+Since strace runs the programs to trace them and some programs take input, 
+control-d must be pressed five times for the function to finish.
+
+It output these libraries:
+abcmodule.so
+_abcollmodule.so
+_abcoll.so
+abc.so
+abrt_exception_handlermodule.so
+abrt_exception_handler.so
+abrt.so
+aliasesmodule.so
+aliases.so
+archive_utilmodule.so
+archive_util.so
+arraymodule.so
+array.so
+atexitmodule.so
+atexit.so
+backportsmodule.so
+backports.so
+base64module.so
+base64.so
+BaseHTTPServermodule.so
+BaseHTTPServer.so
+bdist_eggmodule.so
+bdist_egg.so
+bdistmodule.so
+bdist.so
+binasciimodule.so
+binascii.so
+_bisectmodule.so
+bisectmodule.so
+_bisect.so
+bisect.so
+buildmodule.so
+build.so
+__builtin__module.so
+__builtin__.so
+cgimodule.so
+cgi.so
+cmdmodule.so
+cmd.so
+codecsmodule.so
+codecs.so
+_collectionsmodule.so
+collectionsmodule.so
+_collections.so
+collections.so
+compatmodule.so
+compat.so
+configmodule.so
+ConfigParsermodule.so
+ConfigParser.so
+config.so
+contextlibmodule.so
+contextlib.so
+copymodule.so
+copy_regmodule.so
+copy_reg.so
+copy.so
+coremodule.so
+core.so
+cStringIOmodule.so
+cStringIO.so
+custodiamodule.so
+custodia.so
+debugmodule.so
+debug.so
+dependsmodule.so
+depends.so
+dep_utilmodule.so
+dep_util.so
+dir_utilmodule.so
+dir_util.so
+distmodule.so
+dist.so
+distutilsmodule.so
+distutils.so
+easy_installmodule.so
+easy_install.so
+egg_infomodule.so
+egg_info.so
+emailmodule.so
+email.so
+encdb.so
+encodingsmodule.so
+encodings.so
+errnomodule.so
+errno.so
+errorsmodule.so
+errors.so
+extensionmodule.so
+extension.so
+fancy_getoptmodule.so
+fancy_getopt.so
+fcntlmodule.so
+fcntl.so
+filelistmodule.so
+filelist.so
+file_utilmodule.so
+file_util.so
+fnmatchmodule.so
+fnmatch.so
+_functoolsmodule.so
+functoolsmodule.so
+_functools.so
+functools.so
+__future__module.so
+__future__.so
+genericpathmodule.so
+genericpath.so
+getoptmodule.so
+getopt.so
+globmodule.so
+glob.so
+grpmodule.so
+grp.so
+_hashlibmodule.so
+hashlibmodule.so
+_hashlib.so
+hashlib.so
+_heapqmodule.so
+heapqmodule.so
+_heapq.so
+heapq.so
+htmlentitydefsmodule.so
+htmlentitydefs.so
+httplibmodule.so
+httplib.so
+httpmodule.so
+http.so
+impmodule.so
+imp.so
+__init__module.so
+__init__.so
+install_libmodule.so
+install_lib.so
+installmodule.so
+install_scriptsmodule.so
+install_scripts.so
+install.so
+_iomodule.so
+iomodule.so
+_io.so
+io.so
+ipaddressmodule.so
+ipaddress.so
+ipaplatformmodule.so
+ipaplatform.so
+itertoolsmodule.so
+itertools.so
+keywordmodule.so
+keyword.so
+ld-2.17.so\n7f08a29b50
+ld.so.cache
+ld.so.preload
+libatk-1.0.so.0
+libatk-bridge-2.0.so.0
+libatspi.so.0
+libattr.so.1
+libaudit.so.1
+libavahi-client.so.3
+libavahi-common.so.3
+libblkid.so.1
+libbz2.so.1
+libc-2.17.so\n7f08a17
+libcairo-gobject.so.2
+libcairo.so.2
+libcap-ng.so.0
+libcap.so.2
+libcom_err.so.2
+libcrypt-2.17.so\n7f08a1cdf000-7
+libcrypto.so.10
+libcrypt.so.1
+libc.so.6
+libdb-5.3.so
+libdbus-1.so.3
+libdl.so.2
+libdw.so.1
+libEGL.so.1
+libelf.so.1
+libepoxy.so.0
+libexpat.so.1
+libffi.so.6
+libfontconfig.so.1
+libfreebl3.so
+libfreetype.so.6
+libfribidi.so.0
+libgcc_s.so.1
+libgck-1.so.0
+libgcr-base-3.so.1
+libgcr-ui-3.so.1
+libgcrypt.so.11
+libgdk-3.so.0
+libgdk_pixbuf-2.0.so.0
+libgio-2.0.so.0
+libGLdispatch.so.0
+libglib-2.0.so.0
+libGL.so.1
+libGLX.so.0
+libgmodule-2.0.so.0
+libgobject-2.0.so.0
+libgpg-error.so.0
+libgraphite2.so.3
+libgssapi_krb5.so.2
+libgthread-2.0.so.0
+libgtk-3.so.0
+libharfbuzz.so.0
+libICE.so.6
+libicudata.so.50
+libicui18n.so.50
+libicuuc.so.50
+libjbig.so.2.0
+libjpeg.so.62
+libk5crypto.so.3
+libkeyutils.so.1
+libkrb5.so.3
+libkrb5support.so.0
+liblcms2.so.2
+liblua-5.1.so
+liblz4.so.1
+liblzma.so.5
+libmount.so.1
+libm.so.6
+libncurses.so.5
+libnsl.so.1
+libnspr4.so
+libnss3.so
+libnss_files.so.2
+libnss_nis.so.2
+libnssutil3.so
+libopenjpeg.so.1
+libp11-kit.so.0
+libpam_misc.so.0
+libpam.so.0
+libpango-1.0.so.0
+libpangocairo-1.0.so.0
+libpangoft2-1.0.so.0
+libpcp_pmda.so.3
+libpcp.so.3
+libpcp_web.so.1
+libpcre.so.1
+libpixman-1.so.0
+libplc4.so
+libplds4.so
+libpng15.so.15
+libpoppler.so.46
+libpopt.so.0
+libprocps.so.4
+libpthread-2.17.so
+libpthread.so.0
+libpython2.7.so.1.0
+libQtCore.so.4
+libQtDBus.so.4
+libQtGui.so.4
+libQtXml.so.4
+libreadline.so.6
+libresolv.so.2
+librt.so.1
+libruby.so.2.0
+libsasl2.so.3
+libselinux.so.1
+libSM.so.6
+libssl3.so
+libssl.so.10
+libstdc++.so.6
+libsystemd.so.0
+libthai.so.0
+libtiff.so.5
+libtinfo.so.5
+libutil.so.1
+libuuid.so.1
+libwayland-client.so.0
+libwayland-cursor.so.0
+libwayland-egl.so.1
+libX11.so.6
+libXau.so.6
+libXaw.so.7
+libxcb-render.so.0
+libxcb-shm.so.0
+libxcb.so.1
+libXcomposite.so.1
+libXcursor.so.1
+libXdamage.so.1
+libXext.so.6
+libXfixes.so.3
+libXinerama.so.1
+libXi.so.6
+libxkbcommon.so.0
+libXmu.so.6
+libXpm.so.4
+libXrandr.so.2
+libXrender.so.1
+libXt.so.6
+libXxf86vm.so.1
+libz.so.1
+linecachemodule.so
+linecache.so
+lmimodule.so
+lmi.so
+logmodule.so
+log.so
+marshalmodule.so
+marshal.so
+mathmodule.so
+math.so
+mimetoolsmodule.so
+mimetools.so
+mimetypesmodule.so
+mimetypes.so
+mpl_toolkitsmodule.so
+mpl_toolkits.so
+operatormodule.so
+operator.so
+orgmodule.so
+org.so
+osmodule.so
+os.so
+package_indexmodule.so
+package_index.so
+parsermodule.so
+parser.so
+pastemodule.so
+paste.so
+pkg_resourcesmodule.so
+pkg_resources.so
+pkgutilmodule.so
+pkgutil.so
+platformmodule.so
+platform.so
+posixpathmodule.so
+posixpath.so
+pwdmodule.so
+pwd.so
+py24compatmodule.so
+py24compat.so
+py27compatmodule.so
+py27compat.so
+_randommodule.so
+randommodule.so
+_random.so
+random.so
+remodule.so
+re.so
+rfc822module.so
+rfc822.so
+ruby.so
+sandboxmodule.so
+sandbox.so
+sdistmodule.so
+sdist.so
+selectmodule.so
+select.so
+setoptmodule.so
+setopt.so
+setuptoolsmodule.so
+setuptools.so
+shutilmodule.so
+shutil.so
+SimpleHTTPServermodule.so
+SimpleHTTPServer.so
+sitecustomizemodule.so
+sitecustomize.so
+sitemodule.so
+site.so
+_socketmodule.so
+socketmodule.so
+SocketServermodule.so
+SocketServer.so
+_socket.so
+socket.so
+spawnmodule.so
+spawn.so
+sre_compilemodule.so
+sre_compile.so
+sre_constantsmodule.so
+sre_constants.so
+sre_parsemodule.so
+sre_parse.so
+ssl_match_hostnamemodule.so
+ssl_match_hostname.so
+_sslmodule.so
+sslmodule.so
+_ssl.so
+ssl.so
+ssl_supportmodule.so
+ssl_support.so
+statmodule.so
+stat.so
+StringIOmodule.so
+StringIO.so
+stringmodule.so
+string.so
+stropmodule.so
+strop.so
+_structmodule.so
+structmodule.so
+_struct.so
+struct.so
+symbolmodule.so
+symbol.so
+_sysconfigdatamodule.so
+_sysconfigdata.so
+sysconfigmodule.so
+sysconfig.so
+sysmodule.so
+sys.so
+tarfilemodule.so
+tarfile.so
+tempfilemodule.so
+tempfile.so
+text_filemodule.so
+text_file.so
+textwrapmodule.so
+textwrap.so
+threadingmodule.so
+threading.so
+timemodule.so
+time.so
+tokenmodule.so
+token.so
+tracebackmodule.so
+traceback.so
+transdb.so
+typesmodule.so
+types.so
+urllib2module.so
+urllib2.so
+urllibmodule.so
+urllib.so
+urlparsemodule.so
+urlparse.so
+usercustomizemodule.so
+usercustomize.so
+UserDictmodule.so
+UserDict.so
+UTF-16.so
+utf_8module.so
+utf_8.so
+utilmodule.so
+util.so
+versionmodule.so
+version.so
+warningsmodule.so
+warnings.so
+weakrefmodule.so
+_weakrefsetmodule.so
+_weakrefset.so
+weakref.so
+win32commodule.so
+win32com.so
+_winregmodule.so
+_winreg.so
+zipfilemodule.so
+zipfile.so
+zipimportmodule.so
+zipimport.so
+zlibmodule.so
+zlib.so

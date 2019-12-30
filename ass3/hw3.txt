@@ -1,0 +1,29 @@
+Q1.
+This patch worsens the performance of ls, because the code in ls no longer use
+s the if statement to check whether ignore mode is default when the tag -A is u
+sed. Now, the code always uses the ignore mode of IGNORE_DOT_AND_DOTDOT when it
+ has the -A tag.
+In my directory, la used the unpatched "ls -a" command.
+la2 used the patched "ls -a" command.
+When running the command "time ./la", the time was usually 0.004 seconds.
+When running the command "time ./la2", the time was usually 0.005 seconds.
+Therefore, the patched ls is slower when using only the -a tag.
+When running the command "time ./la -A", the time was usually 0.004 seconds.
+When running the command "time ./la2 -A", the time was usually 0.005 seconds.
+The patched ls is also slower when using both the -a and -A tags.
+
+Q2.
+If a company adopts the patched version of Coreutils instead of the default one
+, there might be a problem when	transferring codes between machines.
+If there are machines with the unpatched version, they will have different beha
+viors of ls compared to the patched versions, so they will have	 unexpected ver
+sions if they are given code based on the patched versions.
+
+Q3.
+An index out of range error is thrown, because an empty file has no lines, so t
+rying to extract any line from an empty file causes an out of bounds error.
+
+Q4.
+A syntax error occurs with Python 3, because the script is written in Python 2 
+syntax for the exception format, and Python 2 exception format is incompatible 
+with Python 3 exception format.

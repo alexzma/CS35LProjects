@@ -1,0 +1,104 @@
+1.
+First, I made a file named tr2b.c
+In the program, I specified that there should be two arguments.
+If there are not two errors, the program throws an error.
+Then, I created a char array with default values of 0.
+The array is size 128, and each location corresponds to a character.
+I looped through the first argument, and placed their values into their positio
+n in the array. If there are duplicates, the program throws an error.
+I initialized each location in the array to the value of its position.
+Then, I read the values of the arguments.
+If the arguments are not the same length, the program throws an error.
+If they are the same length, the program, using the char array, maps each chara
+cter in the second argument to the character in the first argument with the sam
+e position.
+Then, the program reads in characters from standard input using getchar, finds 
+the corresponding transliteration character, and then outputs the character usi
+ng putchar.
+
+2.
+I made a copy of tr2b.c named tr2u.c
+In the new file, I changed getchar call to the equivalent read call.
+I also changed the putchar call to the equivalent write call.
+
+3.
+I created a 5000000 byte file with the command head --bytes=5000000 /dev/urando
+m > bigfile.txt
+I compiled my tr2b.c file into an executable called tr2b
+I compiled my tr2u.c file into an executable called tr2u
+
+a)
+To compare the system calls when copying one file to another, I first used the 
+command strace -c ./tr2b 'a' 'b' <bigfile.txt >bigfile2.txt
+That command listed 611 calls to write, 613 calls to read, 9 calls to mmap, 4 c
+alls to mprotect, 2 calls to open, 1 call to brk, 1 call to munmap, 2 calls to 
+close, 4 calls to fstat, 1 call to access, 1 call to execve, and 1 call to arch
+_prctl.
+
+Then, I removed bigfile2.txt with the command rm bigfile2.txt
+I used the command strace -c ./tr2u 'a' 'b' <bigfile.txt >bigfile2.txt
+That command listed 5000000 calls to write, 5000002 calls to read, 7 calls to m
+map, 4 calls to mprotect, 2 calls to open, 4 calls to brk, 1 call to munmap, 2 
+calls to close, 2 calls to fstat, 1 call to access, 1 call to execve, and 1 cal
+l to arch_prctl.
+
+The unbuffered version used more calls to write, read, and brk compared to the 
+buffered version. On the other hand, the buffered version used more calls to mm
+ap and fstat. Since write, read, and brk are called so much more often than mma
+p and fstat, the buffered version is more efficient in system calls than the un
+buffered version.
+
+b)
+To compare the system calls when copying a file to my terminal, I first used th
+e command strace -c ./tr2b 'a' 'b' <bigfile.txt
+That command listed 19880 calls to write, 613 calls to read, 9 calls to mmap, 4
+calls to mprotect, 2 calls to open, 1 call to brk, 1 call to munmap, 2 calls to
+close, 4 calls to fstat, 1 call to access, 1 call to execve, and 1 call to arch
+_prctl.
+
+Then, I used the command strace -c ./tr2u 'a' 'b' <bigfile.txt
+That command listed 5000000 calls to write, 5000002 calls to read, 7 calls to m
+map, 4 calls to mprotect, 2 calls to open, 4 calls to brk, 1 call to munmap, 2 
+calls to close, 2 calls to fstat, 1 call to access, 1 call to execve, and 1 cal
+l to arch_prctl.
+
+The unbuffered version used more calls to write, read, and brk compared to the 
+buffered version. On the other hand, the buffered version used more calls to mm
+ap and fstat compared to the unbuffered version. Since write, read, and brk are
+called so much more often than mmap and fstat, the buffered version is more eff
+icient in system calls than the unbuffered version.
+
+Copying one file to another is more efficient than copying a file to the termin
+al in terms of system calls when using the buffered version, because there are 
+fewer calls to write and read when copying a file to another with the buffered 
+version compared to copying a file to the terminal with the buffered version.
+
+Copying one file to another is equally efficient to copying a file to the termi
+nal in terms of system calls when using the unbuffered version, because they ha
+ve the same number of the same system calls.
+
+4.
+I removed the file bigfile2.txt again.
+Then, I used the command time ./tr2b 'a' 'b' <bigfile.txt >bigfile2.txt
+The real time of the command was 0.155 seconds.
+The user time of the command was 0.093 seconds.
+The system time of the command was 0.005 seconds.
+
+I removed the file bigfile2.txt once more.
+Then, I used the command time ./tr2u 'a' 'b' <bigfile.txt >bigfile2.txt
+The real time of the command was 9.993 seconds.
+The user time of the command was 1.238 seconds.
+The system time of the command was 8.709 seconds.
+
+Then, I used the command time ./tr2b 'a' 'b' <bigfile.txt
+The real time of the command was 0.835 seconds.
+The user time of the command was 0.127 seconds.
+The system time of the command was 0.100 seconds.
+
+Then, I used the command time ./tr2u 'a' 'b' <bigfile.txt
+The real time of the command was 9.003 seconds.
+The user time of the command was 1.282 seconds.
+The system time of the command was 7.700 seconds.
+
+In all corresponding measurements of time, the unbuffered version was faster th
+an the buffered version.

@@ -1,0 +1,195 @@
+#!/usr/bin/python
+import random, sys, string, argparse
+from optparse import OptionParser
+
+class randline:
+    def __init__(self, filename, parser):
+        try:
+            f = open(filename, 'r')
+            self.lines = f.readlines()
+            self.count = len(self.lines)
+            f.close()
+        except OSError as error:
+            sys.stderr.write(sys.argv[0] + ": " + error.filename +
+                             ": " + error.strerror + "\n")
+            exit(1)
+        except IOError as error:
+            sys.stderr.write(sys.argv[0] + ": " + error.filename +
+                             ": " + error.strerror + "\n")
+            exit(1)
+    def chooseline(self):
+        if len(self.lines) is 0:
+            return ""
+        line = random.choice(self.lines)
+        self.lines.remove(line)
+        return line
+    def chooselineR(self):
+        if len(self.lines) is 0:
+            return ""
+        line = random.choice(self.lines)
+        return line
+
+class randline2:
+    def __init__(self, inp):
+        self.lines = inp.readlines()
+        self.count = len(self.lines)
+    def chooseline(self):
+        if len(self.lines) is 0:
+            return ""
+        line = random.choice(self.lines)
+        self.lines.remove(line)
+        return line
+    def chooselineR(self):
+        if len(self.lines) is 0:
+            return ""
+        line = random.choice(self.lines)
+        return line
+
+def main():
+    usage_msg = """%(prog)s [OPTION]... [FILE]
+  or:  %(prog)s -i LO-HI [OPTION]...
+Write a random permutation of the input lines to standard output.
+
+With no FILE, or when FILE is -, read standard input.
+
+Mandatory arguments to long options are mandatory for short options too."""
+    epilogue = """GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+Full documentation <https://www.gnu.org/software/coreutils/shuf>
+or available locally via: info '(coreutils) shuf invocation'"""
+    parser = argparse.ArgumentParser(usage=usage_msg,
+                                     formatter_class=argparse.RawTextHelpFormatter,
+                                     epilog=epilogue)
+    parser.add_argument("-n", "--head-count",
+                       action="store", dest="count",
+                       help="output up to COUNT lines")
+    parser.add_argument("-i", "--input-range",
+                       action="store", dest="lo_hi", metavar="LO-HI",
+                       help="treat each number LO through HI as an input line")
+    parser.add_argument("-r", "--repeat", dest="repeat",
+                        action="store_true",
+                        default=False, help="output lines can be repeated")
+    parser.add_argument("input_file", action="store",
+                        nargs="*", default="-", help=argparse.SUPPRESS)
+    options = parser.parse_args(sys.argv[1:])
+    count = 0
+    for i in sys.argv[1:]:
+        if i is options.count:
+            if options.count is None and options.repeat == True:
+                count = float("inf")
+            elif options.count is None:
+                count = 1
+            else:
+                try:
+                    count = int(options.count)
+                except:
+                    sys.stderr.write(sys.argv[0] + ": invalid line count: '"
+                                     + options.count + "'\n")
+                    exit(1)
+            if count < 0:
+                sys.stderr.write(sys.argv[0] + ": invalid line count: '"
+                                 + options.count + "'\n")
+                exit(1)
+        if i is options.lo_hi:
+            if options.lo_hi is not None:
+                try:
+                    inp = str(options.lo_hi)
+                except:
+                    sys.stderr.write(sys.argv[0] + ": invalid input range: '"
+                                     + options.lo_hi + "'\n")
+                    exit(1)
+                try:
+                    dash = inp.find("-")
+                    dash = int(dash)
+                    int1 = int(inp[:dash])
+                    int2 = int(inp[dash+1:])
+                except:
+                    sys.stderr.write(sys.argv[0] + ": invalid input range: '"
+                                     + options.lo_hi + "'\n")
+                    exit(1)
+                int2 += 1
+                if int1 > int2:
+                    sys.stderr.write(sys.argv[0] + ": invalid input range: '"
+                                     + options.lo_hi + "'\n")
+                    exit(1)
+                integers = list(range(int1, int2))
+                if options.repeat == True and options.count is None:
+                    count = float("inf")
+                elif options.count is None:
+                    count = len(integers)
+                else:
+                    try:
+                        count = int(options.count)
+                    except:
+                        sys.stderr.write(sys.argv[0] +
+                                         ": invalid line count: '" + 
+                                         options.count + "'\n")
+                if count < 0:
+                    sys.stderr.write(sys.argv[0] + ": invalid line count: '"
+                                     + options.count + "'\n")
+                    exit(1)
+                if options.input_file is not "-":
+                    sys.stderr.write(sys.argv[0] + ": extra operand '" +
+                                     options.input_file[0] + "'\n")
+                    sys.stderr.write("Try '" + sys.argv[0] +
+                                     " --help' for more information.\n")
+                    exit(1)
+                i = 0
+                if len(integers) is 0 and options.repeat == True:
+                    sys.stderr.write(sys.argv[0] + ": no lines to repeat\n")
+                    exit(1)
+                while i < count:
+                    if len(integers) is 0:
+                        break
+                    choice = random.choice(integers)
+                    sys.stdout.write(str(choice))
+                    if options.repeat == False:
+                        integers.remove(choice)
+                    sys.stdout.write("\n")
+                    i += 1
+                return
+    if len(options.input_file) != 1:
+        sys.stderr.write(sys.argv[0] + ": extra operand: '" +
+                         options.input_file[1] + "'\n")
+        sys.stderr.write("Try '" + sys.argv[0] +
+                          " --help' for more information.\n")
+        exit(1)
+    input_file = options.input_file[0]
+    if input_file == '-':
+        input_file = sys.__stdin__
+        generator = randline2(input_file)
+        if options.count is None and options.repeat is not True:
+            count = generator.count
+        elif options.count is None and options.repeat is True:
+            count = float("inf")
+        if generator.count is 0 and options.repeat is True:
+            sys.stderr.write(sys.argv[0] + ": no lines to repeat\n")
+            exit(1)
+        index = 0
+        while index < count:
+            if options.repeat == True:
+                sys.stdout.write(generator.chooselineR())
+            else:
+                sys.stdout.write(generator.chooseline())
+            index += 1
+    else:
+        generator = randline(input_file, parser)
+        if options.count is None and options.repeat is not True:
+            count = generator.count
+        elif options.count is None and options.repeat is True:
+            count = float("inf")
+        if generator.count is 0 and options.repeat is True:
+            sys.stderr.write(sys.argv[0] + ": no lines to repeat\n")
+            exit(1)
+        index = 0
+        while index < count:
+            if options.repeat == True:
+                sys.stdout.write(generator.chooselineR())
+            else:
+                sys.stdout.write(generator.chooseline())
+            index += 1
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit(130)

@@ -1,0 +1,131 @@
+I made a shell script named la with the code as follows:
+#!/bin/sh
+exec ls -a "$@"
+
+This code is in the shell sh, and executes ls -a with the input at the end.
+This code runs the default ls, which is in the /usr/bin directory.
+
+Running the command ./la outputs all the contents of the current directory, inc
+luding the current and previous directories, as expected.
+Running the command ./la -A outputs all the contents of the current directory, 
+including the current and previous directories, which is wrong.
+
+I also ran the command man ls, which showed that the coreutils version was 8.4.
+
+I downloaded the file using the command curl -o coreutils-8.29.tar.xz ftp://ftp
+.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz
+
+I downloaded the file signature using the command wget ftp://ftp.gnu.org/gnu/co
+reutils/coreutils-8.29.tar.xz.sig
+
+I downloaded the GNU keyring using the command wget https://ftp.gnu.org/gnu/gnu
+-keyring.gpg
+
+I used the command gpg --verify --keyring ./gnu-keyring.gpg coreutils-8.29.tar.
+xz.sig to verify it
+Unfortunately, the command did not give a positive verification, because "This 
+key is not certified with a trusted signature!" and "There is no indication tha
+t the signature belongs to the owner."
+The command did give the name of the signature with "Good signature from "Pádra
+ig Brady <P@draigBrady.com>"", "aka "Pádraig Brady <pbrady@redhat.com>"", and "
+aka "Pádraig Brady <pixelbeat@gnu.org>""
+
+I used the command tar -xJvf coreutils-8.29.tar.xz.sig to unzip the tar file.
+
+I created a directory named temp in which to store my coreutils installation.
+Then, I used the command ./configure --prefix=/u/cs/ugrad/alexandm/ass3/temp
+
+This makes the installation go to my temp directory
+
+Then, I used the commands "make" and then "make install"
+This installs the coreutils in my temp directory
+
+Then, I created another shell script la2 with the contents
+#!/bin/sh
+exec ~/ass3/temp/bin/ls -a "$@"
+
+This does the same as la, except it runs the version of ls just installed.
+Running the command ./la2 outputs all the contents of the current directory, in
+cluding the current and previous directories, as expected.
+Running the command ./la2 -A outputs all the contents of the current directory,
+ including the current and previous directories, which is incorrect.
+Therefore, the newly installed directory has the same error as the original ls.
+
+I downloaded the patch file using the command wget "https://debbugs.gnu.org/cgi
+/bugreport.cgi?bug=30963;msg=10;filename=0001-ls-A-now-overrides-a.patch;att=1"
+
+I renamed the resulting file to 0001-ls-A-now-overrides-a.patch using mv.
+I moved the file to the unzipped coreutils directory using the command mv 0001-
+ls-A-now-overrides-a.patch coreutils-8.29/0001-ls-A-now-overrides-a.patch
+
+Then, I changed directory with the command cd coreutils-8.29
+I used the command patch -p1 <0001-ls-A-now-overrides-a.patch
+That command applies the patch to the files in the directory, removing the firs
+t level of the path in the filenames
+One of the files, NEWS, did not patch correctly
+I ran the commands "autoreconf" and "make" to rebuild the files
+
+During the make command, many other commands were executed.
+First, there was the command ./config.status --recheck
+This command is needed, because the program needs to know whether the system ha
+s the tools necessary for the rest of the commands to work properly.
+The config.status command calls the configure command on the shell to see if th
+e shell has the correct tools.
+This command is necessary for the same reason as the previous command.
+
+After that command runs, then a new config.status is generated from configure, 
+and that config.status is executed without the --recheck flag.
+This command generates many files.
+The makefiles and the files associated with them are generated first.
+This step is necessary, because the makefiles tell how to create the other file
+s.
+After that, the files in the directories lib and src are created.
+These files are necessary, because they contain definitions of functions necess
+ary for the execution of files which will be used later in the make process.
+
+The next command executed is make all-recursive
+This command goes into the directories recursively and makes the necessary file
+s.
+This command is necessary, because this command runs the commands that install 
+the files that are output into the program.
+
+The po directory was the first directory on which the command make all ran.
+This command was not necessary, as no changes to po were made.
+
+Then, the make command tests whether doc/.dirstamp exists, and if not, make it 
+with the command test -f doc/.dirstamp || make doc/.dirstamp
+This command is necessary, because dirstamp verifies that the directory doc exi
+sts, which is used for other parts of the program.
+
+The previous command (test) was in the directory of the original makefile, and 
+then the program provides a not that the program entered and exited that same d
+irectory. This does not appear to be necessary for the program to run properly.
+
+After this, many object files in lib are executed in CC, and one static library
+ file in lib is accessed with AR.
+This creates even more setup for the installation output, so this is necessary.
+
+One static library in src is accessed with AR, and many object files in src are
+ executed through a combination of CC and CCLD.
+The CCLD commands are the reason why the lib object files are run first, becaus
+e the LD part must link to a library, and the libraries are (presumably) in lib
+. The execution of these files creates the commands of coreutils.
+
+Finally, the man pages are generated.
+This is a necessary step, because man pages are part of the output.
+
+Then, the command make all-recursive is run in the directory gnu-lib-tests.
+Apparently, the command was not necessary, because the command output "Nothing 
+to be done for `all-am'".
+That was the last command in the program.
+
+After this, I ran the command make install
+This command installs the files in the directory I chose earlier (temp).
+
+I changed to the directory in which I created la2 using cd
+I ran the command ./la2, which outputs all the contents of the current director
+y, including the current and previous directories, as it did before the patch.
+However, the command ./la2 -A now outputs all the contents of the current direc
+tory but the current and previous directories, which is not the same behavior a
+s before the patch. This is the correct behavior.
+Therefore, the patch has fixed the bug.

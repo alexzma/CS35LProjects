@@ -1,0 +1,72 @@
+First, I downloaded the old version of coreutils with wget.
+Then, I unzipped the tarball using the command tar xvzf.
+This created a directory in the working directory called coreutils-with-bug
+
+I made a directory called temp in my working directory to store the files made
+from running make on the coreutils-with-bug directory.
+
+I switched to the coreutils-with-bug directory
+I ran the command ./configure --prefix=/u/cs/ugrad/alexandm/ass4/temp
+This configures the make and sets the destination to temp
+
+Then, I ran the make command, which resulted in errors, so make failed.
+Then, I ran the make install command, which resulted in the same errors.
+
+So I ran the configure command from above again.
+Then, I ran the make and make install commands again, wit the same result.
+The make commands are failing, because the old version had a version of the fun
+ction in one file that was implemented in a different file in the new version.
+This caused a conflict between the two functions.
+
+I imported the patch using wget.
+I used the command patch -p0 <coreutils.diff
+This patch changes the name of the function so it no longer conflicts with the 
+new version
+
+After this, I ran configure again, the same way as before the patch.
+Then, I ran make and make install.
+This time, the installation worked.
+
+I created a shell script as follows:
+#!/bin/bash
+tmp=$(mktemp -d)
+cd $tmp
+touch -d '1918-11-11 11:00 GMT' wwi-armistice-cs35L
+touch now
+sleep 1
+touch now1
+TZ=UTC0 ~/ass4/temp/bin/ls -lt --full-time wwi-armistice-cs35L now now1
+cd
+rm -fr $tmp
+
+This version creates temporary files and directories and views them with the ol
+d version of ls
+As expected, the old version of ls listed the extremely old file as the newest
+
+I used gdb to debug the ls executable.
+I found that the function compare_mtime is called by ls.c to compare the times 
+of the files.
+The function compare_mtime calls timespec_cmp, which is in timespec.h
+That function subtracts the two times and returns the result of the subtraction
+If that subtraction overflows, however, the comparison will be wrong.
+This problem can be solved by checking for overflow before computing the subtra
+ction
+If the subtraction would overflow, the two numbers must be opposite signs
+Therefore, if you check the signs before subtracting, you can know which is gre
+ater while avoiding overflow
+If it does not overflow, the subtraction still works.
+I created a copy of timespec.h with the cp command
+With the copy, I implemented the checking for overflow
+I made a patch file using the diff command.
+Then, I patched the old file and ran the shell script again.
+However, this did not fix the problem.
+I ran make and make install again, and the problem was solved.
+
+I created a copy of the original test script named test2 using the cp command.
+I moved the script to the home directory.
+I edited the script to no longer create the $tmp directory and using the defaul
+t path for ls.
+In this case, the touch function created the extremely old file as a file from 
+the future (or ls interpreted the extremely old date as a future date)
+Therefore, the output appears to be in the order of the dates listed, even if t
+he dates are wrong.

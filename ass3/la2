@@ -1,0 +1,2 @@
+#!/bin/sh
+exec ~/ass3/temp/bin/ls -a "$@"

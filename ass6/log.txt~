@@ -1,0 +1,150 @@
+I ran the command "sort --version" on linux server 7 to find the version of the
+ current sort command. The version was 8.22, which is more recent than 8.6, so 
+the version of sort contained multithreading and could be used for the 
+assignment.
+
+Then, I created a script called floats.sh with the code as follows:
+#!/bin/bash
+num=$((2**24))
+i=0
+while [ $i -lt $num ]
+do
+if [ $i -eq $num ]
+then
+od -t fF -N 1 </dev/urandom | sed -r 's/^[0-9]*//g' |
+tr -d ' ' | tr -d '\n' >>float.txt
+else
+od -t fF -N 1 </dev/urandom | sed -r 's/^[0-9]*//g' |
+tr -d ' ' | tr '\n' 'n' | sed 's/n$//g' | tr 'n' '\n' >>float.txt
+fi
+i=$(($i+1))
+done
+
+The script takes 2^24 random bytes from /dev/urandom, interprets them as single
+-precision floats, and places them one per line in a file called float.txt.
+After over two hours, the script still had not created the 16777216 floating 
+point numbers. It had only created 2633058 numbers, and then the server
+disconnected me. Since the script had not yet finished, I changed 2**24 to
+2**24-2633058 and ran the command again.
+
+Once I reached 3511390 numbers, I decided that the program was running too
+slowly for my liking. Therefore, I changed the program to this:
+#!/bin/bash
+num=$((2**24-3511390))
+i=0
+while [ $i -lt $num ]
+do
+od -t fF -N 1 </dev/urandom | sed -r 's/^[0-9]*//g' |
+tr -d ' ' | tr '\n' 'n' | sed 's/n$//g' | tr 'n' '\n' >>float.txt
+i=$(($i+1))
+done
+
+This program is faster, because it no longer checks whether the variables i and
+ num are equal for each iteration of the loop. Then, I ran the program.
+
+I stopped the program at the 4596647th number to take a break. I changed the 
+initial value of num to 2**24-4596647 accordingly.
+
+After the break, I decided to obtain all the numbers at once and then process 
+the output all at once. Therefore, I wrote this program:
+#!/bin/bash
+#num=$((2**24-4596647))
+#i=0
+#while [ $i -lt $num ]
+#do
+od -t fF -N 32 </dev/urandom | sed -r 's/^[0-9]*[ ]*//g' |
+sed -r 's/[ ]+[ ]+/ /g' | tr ' ' '\n' | tr '\n' 'P' | sed 's/PP/P/g' |
+tr 'P' '\n' | tr 'n' '\n' >>floaty.txt
+#i=$(($i+1))
+#done
+This script was to test how many bytes are in a single precision float. This 
+output 8 numbers into floaty.txt, so there are 4 bytes per float.
+
+With that in mind, I changed the script to this:
+#!/bin/bash
+num=$((2**24*4))
+od -t fF -N $num </dev/urandom | sed -r 's/^[0-9]*[ ]*//g' |
+sed -r 's/[ ]+[ ]+/ /g' | tr ' ' '\n' | tr '\n' 'P' | sed 's/PP/P/g' |
+tr 'P' '\n' | tr 'n' '\n' >>floaty.txt
+
+This should input 2^24 floats into floaty.txt at a faster rate than the
+previous script.
+This script ran in about 30 seconds, but input 16907215 lines.
+This is the case, because it turned NaN the N's in NaN into newline characters
+due to the piping tr 'n' '\n' that I forgot to remove.
+This is the final program I used to create the floats:
+#!/bin/bash
+num=$((2**24*4))
+od -t fF -N $num </dev/urandom | sed -r 's/^[0-9]*[ ]*//g' |
+sed -r 's/[ ]+[ ]+/ /g' | tr ' ' '\n' | tr '\n' 'P' | sed 's/PP/P/g' |
+tr 'P' '\n' | head -c -1 >floaty.txt
+
+As expected, this output 16777216 lines of floats.
+Then, I ran the command "time -p sort -g <floaty.txt >/dev/null"
+real time: 38.04 seconds
+user time: 205.71 seconds
+system time: 0.81 seconds
+
+Then, I ran the command "time -p sort -g --parallel=1 <floaty.txt >/dev/null"
+real time: 194.79 seconds
+user time: 194.45 seconds
+system time: 0.33 seconds
+
+Then, I ran the command "time -p sort -g --parallel=2 <floaty.txt >/dev/null"
+real time: 103.76 seconds
+user time: 196.86 seconds
+system time: 0.52 seconds
+
+Then, I ran the command "time -p sort -g --parallel=4 <floaty.txt >/dev/null"
+real time: 58.15 seconds
+user time: 196.63 seconds
+system time: 0.66 seconds
+
+Then, I ran the command "time -p sort -g --parallel=8 <floaty.txt >/dev/null"
+real time: 37.44 seconds
+user time: 205.17 seconds
+system time: 0.77 seconds
+
+With more threads, the real time decreased in proportion to the number of 
+threads. With one thread, the real time was about the same as the user time. 
+With two threads, the real time was about one half the user time. With four 
+threads, the real time was about one quarter the user time. With eight threads,
+ the real time was about one fifth the user time. With too many threads, 
+performance gain appears to decrease.
+
+There appeared to be no correlation between user time and number of threads.
+
+The system time increased as the number of threads increased.
+
+The default number of threads of sort appears to be 8, as the default times 
+are more similar to the eight threads times than the other times.
+
+I timed the programs again on the sort in the folder /usr/local/cs/bin in case 
+there was a significant difference in time.
+
+time -p sort -g <floaty.txt >/dev/null
+real time: 36.36 seconds
+user time: 197.67 seconds
+system time: 0.81 seconds
+
+time -p sort -g --parallel=1 <floaty.txt >/dev/null
+real time: 179.80 seconds
+user time: 179.47 seconds
+system time: 0.32 seconds
+
+time -p sort -g --parallel=2 <floaty.txt >/dev/null
+real time: 94.96 seconds
+user time: 180.03 seconds
+system time: 0.48 seconds
+
+time -p sort -g --parallel=4 <floaty.txt >/dev/null
+real time: 56.99 seconds
+user time: 192.01 seconds
+system time: 0.64 seconds
+
+time -p sort -g --parallel=8 <floaty.txt >/dev/null
+real time: 36.66 seconds
+user time: 197.44 seconds
+system time: 0.77 seconds
+
+There was no significant difference in times between the different versions.

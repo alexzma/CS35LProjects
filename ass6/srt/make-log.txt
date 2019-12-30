@@ -1,0 +1,43 @@
+rm -f *.o *.tmp 1-test.ppm 2-test.ppm 4-test.ppm 8-test.ppm srt srt.tgz
+gcc -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter   -c -o main.o main.c
+main.c: In function ‘main’:
+main.c:442:2: warning: passing argument 2 of ‘pthread_join’ from incompatible pointer type [enabled by default]
+  if(!pthread_join(threads[i],strptr)){
+  ^
+In file included from main.c:28:0:
+/usr/include/pthread.h:252:12: note: expected ‘void **’ but argument is of type ‘char ***’
+ extern int pthread_join (pthread_t __th, void **__thread_return);
+            ^
+main.c:283:16: warning: ‘threads’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+     pthread_t* threads;
+                ^
+gcc -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter   -c -o raymath.o raymath.c
+gcc -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter   -c -o shaders.o shaders.c
+gcc -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter -o srt main.o raymath.o shaders.o -lm -lpthread
+time ./srt 1-test.ppm >1-test.ppm.tmp
+
+real	0m44.638s
+user	0m44.633s
+sys	0m0.001s
+mv 1-test.ppm.tmp 1-test.ppm
+time ./srt 2-test.ppm >2-test.ppm.tmp
+
+real	0m22.434s
+user	0m44.650s
+sys	0m0.003s
+mv 2-test.ppm.tmp 2-test.ppm
+time ./srt 4-test.ppm >4-test.ppm.tmp
+
+real	0m14.914s
+user	0m44.783s
+sys	0m0.002s
+mv 4-test.ppm.tmp 4-test.ppm
+time ./srt 8-test.ppm >8-test.ppm.tmp
+
+real	0m9.315s
+user	0m44.783s
+sys	0m0.004s
+mv 8-test.ppm.tmp 8-test.ppm
+for file in 1-test.ppm 2-test.ppm 4-test.ppm 8-test.ppm; do \
+  diff -u baseline.ppm $file || exit; \
+done

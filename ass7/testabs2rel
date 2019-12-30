@@ -1,0 +1,96 @@
+execve("/usr/bin/abs2rel", ["/usr/bin/abs2rel"], [/* 40 vars */]) = 0
+brk(NULL)                               = 0x1b27000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fceb473d000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+open("/usr/lib64/tls/x86_64/liblua-5.1.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/lib64/tls/x86_64", 0x7ffe62c12100) = -1 ENOENT (No such file or directory)
+open("/usr/lib64/tls/liblua-5.1.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/lib64/tls", {st_mode=S_IFDIR|0555, st_size=4096, ...}) = 0
+open("/usr/lib64/x86_64/liblua-5.1.so", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+stat("/usr/lib64/x86_64", 0x7ffe62c12100) = -1 ENOENT (No such file or directory)
+open("/usr/lib64/liblua-5.1.so", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0`o\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=193864, ...}) = 0
+mmap(NULL, 2283096, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fceb42ef000
+mprotect(0x7fceb431b000, 2093056, PROT_NONE) = 0
+mmap(0x7fceb451a000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2b000) = 0x7fceb451a000
+close(3)                                = 0
+open("/usr/lib64/tls/libreadline.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("/usr/lib64/libreadline.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0PO\1\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=285232, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fceb473c000
+mmap(NULL, 2380744, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fceb40a9000
+mprotect(0x7fceb40e5000, 2097152, PROT_NONE) = 0
+mmap(0x7fceb42e5000, 32768, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3c000) = 0x7fceb42e5000
+mmap(0x7fceb42ed000, 5064, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fceb42ed000
+close(3)                                = 0
+open("/usr/lib64/tls/libncurses.so.5", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("/usr/lib64/libncurses.so.5", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0Pm\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=163704, ...}) = 0
+mmap(NULL, 2254920, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fceb3e82000
+mprotect(0x7fceb3ea8000, 2093056, PROT_NONE) = 0
+mmap(0x7fceb40a7000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x25000) = 0x7fceb40a7000
+close(3)                                = 0
+open("/usr/lib64/tls/libtinfo.so.5", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("/usr/lib64/libtinfo.so.5", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0@\316\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=174576, ...}) = 0
+mmap(NULL, 2268928, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fceb3c58000
+mprotect(0x7fceb3c7d000, 2097152, PROT_NONE) = 0
+mmap(0x7fceb3e7d000, 20480, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x25000) = 0x7fceb3e7d000
+close(3)                                = 0
+open("/usr/lib64/tls/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("/usr/lib64/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20S\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1137024, ...}) = 0
+mmap(NULL, 3150120, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fceb3956000
+mprotect(0x7fceb3a57000, 2093056, PROT_NONE) = 0
+mmap(0x7fceb3c56000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x100000) = 0x7fceb3c56000
+close(3)                                = 0
+open("/usr/lib64/tls/libdl.so.2", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("/usr/lib64/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\220\r\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=19288, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fceb473b000
+mmap(NULL, 2109712, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fceb3752000
+mprotect(0x7fceb3754000, 2097152, PROT_NONE) = 0
+mmap(0x7fceb3954000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7fceb3954000
+close(3)                                = 0
+open("/usr/lib64/tls/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+open("/usr/lib64/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\340$\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=2151672, ...}) = 0
+mmap(NULL, 3981792, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7fceb3385000
+mprotect(0x7fceb3547000, 2097152, PROT_NONE) = 0
+mmap(0x7fceb3747000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1c2000) = 0x7fceb3747000
+mmap(0x7fceb374d000, 16864, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7fceb374d000
+close(3)                                = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fceb473a000
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fceb4738000
+arch_prctl(ARCH_SET_FS, 0x7fceb4738740) = 0
+mprotect(0x7fceb3747000, 16384, PROT_READ) = 0
+mprotect(0x7fceb3954000, 4096, PROT_READ) = 0
+mprotect(0x7fceb3c56000, 4096, PROT_READ) = 0
+mprotect(0x7fceb3e7d000, 16384, PROT_READ) = 0
+mprotect(0x7fceb40a7000, 4096, PROT_READ) = 0
+mprotect(0x7fceb42e5000, 8192, PROT_READ) = 0
+mprotect(0x7fceb451a000, 8192, PROT_READ) = 0
+mprotect(0x602000, 4096, PROT_READ)     = 0
+mprotect(0x7fceb473e000, 4096, PROT_READ) = 0
+brk(NULL)                               = 0x1b27000
+brk(0x1b48000)                          = 0x1b48000
+brk(NULL)                               = 0x1b48000
+open("/usr/bin/abs2rel", O_RDONLY)      = 3
+fstat(3, {st_mode=S_IFREG|0755, st_size=1661, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fceb4737000
+read(3, "#!/usr/bin/lua\n\n--[[\nabs2rel for"..., 4096) = 1661
+read(3, "", 4096)                       = 0
+close(3)                                = 0
+munmap(0x7fceb4737000, 4096)            = 0
+rt_sigaction(SIGINT, {0x401550, [INT], SA_RESTORER|SA_RESTART, 0x7fceb33bb280}, {SIG_DFL, [], 0}, 8) = 0
+write(2, "usage: /usr/bin/abs2rel <PATH> <"..., 38usage: /usr/bin/abs2rel <PATH> <BASE>
+) = 38
+exit_group(1)                           = ?
++++ exited with 1 +++

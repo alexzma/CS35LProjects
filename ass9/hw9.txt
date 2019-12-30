@@ -1,0 +1,104 @@
+I entered the diffutils-3.0 directory with the command "cd diffutils-3.0"
+Then, I created a new branch with version 3.0 called "quote" with the command 
+"git checkout -b quote 022cd5c5eb647a22a4daa5fe5cbc10af6d5a1112"
+I copied the patch quote-3.0-patch.txt into the directory with the command 
+"cp ../quote-3.0-patch.txt quote-3.0-patch.txt"
+Then, I ran the command "patch -p1 <quote-3.0-patch.txt"
+
+I entered the src directory with the command "cd src"
+I opened cmp.c, diff.c, diff3.c, dir.c, sdiff.c, and util.c with emacs and used
+ the command add-change-log-entry-other-window (C-x 4 a).
+These commands created a file called ChangeLog with descriptions of the changes
+ in the src directory.
+I changed the file manually so it would display correctly when "make distdir" 
+was run.
+I moved ChangeLog to the diffutils-3.0 directory with the command 
+"mv ChangeLog ../ChangeLog"
+
+I returned to the diffutils-3.0 directory with the command "cd .."
+I moved my ChangeLog to my working directory with the command 
+"cp ChangeLog ../ChangeLog"
+I removed the patch file with the command "rm quote-3.0-patch.txt"
+I used the command "git add src/*.c" to add the changed files to the commit.
+I used the command "git commit -F ChangeLog" to commit with the message in my 
+ChangeLog.
+I used the command "git format-patch --stdout -1 quote >formatted-patch.txt" to
+ create a formatted patch of the last commit.
+I copied my formatted patch to my working directory with the command 
+"cp formatted-patch.txt ../formatted-patch.txt"
+
+I created a new branch called quote with the command "git checkout -b partner 
+022cd5c5eb647a22a4daa5fe5cbc10af6d5a1112"
+I copied my partner Ethan's format-patch into my directory.
+Then, I tried to use the command "git am <formatted-patch.txt"
+The command failed, because, as mentioned in the lab, I used cp and the --bool 
+tag was missing in the copied version, which means the command failed.
+Interestingly, my partner encountered no problem with my version when running 
+the same command.
+Then, I returned to my working directory with the command "cd .."
+I used the command "git clone ~eggert/src/gnu/diffutils diffutils" to clone the
+directory.
+I copied formatted-patch.txt into the directory and used the command 
+"git am <formatted-patch.txt"
+This time, the command worked.
+I ran the command "./bootstrap"
+I ran the command 
+"wget http://web.cs.ucla.edu/classes/spring19/cs35L/assign/diffutils-gets.diff"
+to download a patch.
+Then, I used the command "patch -p0 <diffutils-gets.diff"
+I ran the command "./configure"
+I ran the command "make"
+I ran the command "make check", and the same output as the lab occurred.
+I ran the command "make distdir"
+I used the command "emacs diffutils*/ChangeLog" and Ethan's change showed.
+
+I also tested Kayla's patch.
+Her patch worked too.
+
+My partners tested my patch, and it worked for them.
+
+I entered the emacs directory with the command "cd  ~eggert/src/gnu/emacs"
+I ran the command gitk, and a window popped up.
+To search for the newest merge not newer than 2015-01-25, I typed "Merge" into 
+the search field and used the arrows next to Find until I reached the correct 
+merge.
+The most recent merge was named "Merge branch 'master' into xwidget" with the 
+author Joakim Verona <joakim@verona.se> on 2015-01-25 at 12:19:27.
+
+At the top, there is a navigation bar with the options File, Edit, View, Help
+Below that on the left, there was a window with a visual representation of the 
+nodes and branches of the git repository, with the commit name next to its node
+In the center below the navigation bar, there was the name and email of the 
+author of the commit, in line with the commit.
+To the right below the navigation bar, there was the time of the commit in line
+ with the commit.
+Below the commits, there was the search bar.
+In the search bar, there were three rows.
+
+In the first row, there was a field for the hash id of the currently selected 
+commit.
+To the right was a field for the row of the currently selected commit.
+To the right of that was a field for the total number of commits.
+
+In the second row, there were up and down arrows to go to the next and previous
+ commits, respectively.
+To the right of those was a field for the type of search.
+To the right of that was a field the phrase to search.
+To the right of that was a field for the matching of the phrase.
+To the right of that was a field for the restrictions of the data to search.
+
+In the third row, there was a search button with an input field to the right.
+To the right of that were two radio buttons to choose whether you looked at the
+patch changes or the entire repository.
+
+Below the search button and field was another row.
+There were three radio buttons to determine how to view the differences.
+There was both, old only, and new only.
+To the right was a field for the number of lines above and below.
+To the right of that was a checkbox to ignore changes in spacing.
+
+Below those was a window displaying the differences between the old and new 
+versions.
+
+To the right of that was a window displaying either the changes or the files, 
+depending on the two radio buttons above it which were mentioned earlier.

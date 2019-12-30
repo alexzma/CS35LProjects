@@ -1,0 +1,2 @@
+#!/bin/sh
+tr -cs "A-Za-z\'" "[\n*]" $input | tr 'A-Z' 'a-z' | sort -u | comm -23 - hwords

@@ -1,0 +1,49 @@
+1.
+The resulting network is still secure if the bytes were being observed.
+The private key of the server is never sent over the network, so the server 
+private key is secure throughout the process.
+The public key of the client is sent over with the ssh-copy-id command, but 
+since the public key is available to all, the security does not decrease if 
+the public key is compromised.
+After the public key is sent, the private key of the client is sent over with 
+the command ssh-add. The ssh-add command sends the client's private key in a 
+form encrypted by the server's public key. However, hackers can not decrypt to 
+obtain the client's private key, because the server's private key is needed to 
+decrypt files encrypted by the server's public key. Therefore, the client's 
+private key is still secure.
+All communication after that is secure, because the hackers have no way of 
+decrypting the messages encrypted with the public keys, since they do not have 
+the private keys.
+
+The resulting network is still secure if the bytes were being observed and the
+ hackers tapped the keyboards after client-server setup.
+Although the hackers may learn the passwords and the operations done, the 
+hackers still do not know either of the private keys, since they are not 
+indicated by the keystrokes after the setup. Therefore, the hackers still can 
+not access the network, because ssh-agent is used to store the client's private
+ key and this is used to authenticate the client. Therefore, the private key of
+ the client is needed for login.
+
+The resulting network is not secure if the network was booted off USB and 
+hackers had physical control of the USB.
+This is the case, because the USB contains the private key of the server, the 
+private key of the client, the public key of the server, and the public key of 
+the client.
+The USB contains the private key of the server, because it is the server.
+The USB contains the private key of the client, because the private key of the 
+client is sent over to the server using ssh-add.
+The USB contains the public key of the server, because it is the server.
+The USB contains the public key of the client, because the public key of the 
+client is sent over to the server using ssh-copy-id.
+With this information, hackers can decrypt any communication occurring between 
+the server and client, and can even pretend to be either the server or the 
+client, using their public and private keys.
+
+2.
+The gpg2 --verify command does not verify that I personally created the file, 
+because it only checks the signature of the file. If someone else has my 
+signature, they could create a file and sign it with my signature, and the 
+gpg2 --verify command would not know the difference.
+Also, the signature's name can be set to any name, so I could make my signature
+ say that I am someone else, and gpg2 can not verify that.
+To fix this problem, I would make an online database of signatures

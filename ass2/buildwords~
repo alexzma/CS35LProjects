@@ -1,0 +1,6 @@
+#!/bin/bash
+t="$(sed "s/?//g" $1 | sed "s/<u>//g" | sed "s/<\/u>//g")"
+s="$(grep -i -E "\s*<td[^>]*>[pk\'\`mnwlhaeiou[:blank:]]+</td>\s*" <(echo "$t"))"
+t="$(sed "s/\`/\'/g" <(echo "$s") | sed "s/<td[^>]*>//g")"
+s="$(sed "s/<\/td>//g" <(echo "$t") | tr 'A-Z' 'a-z' | sed "s/  //g")"
+sed "s/ /\n/g" <(echo "$s") | sort -u

@@ -1,0 +1,238 @@
+First, I used the command "cp -r ~eggert/src/gnu/diffutils diffutils"
+This command copied the directory ~eggert/src/gnu/diffutils into a directory 
+named diffutils recursively.
+Then, I entered the directory with the command "cd diffutils"
+Then, I created a text file with the log of changes to the diffutils directory 
+using the command "git log &>git-log.txt"
+I copied the file to my working directory using "cp git-log.txt ../git-log.txt"
+I removed git-log.txt from the diffutils directory with the command "rm git-log.txt"
+
+I accidentally added a tag named help with the command "git tag help"
+I removed the tag using the command "git tag -d help"
+I placed the tags in a text file named git-tags.txt with the command 
+"git tag &>git-tags.txt"
+I copied the file to my working directory using "cp git-tags.txt ../git-tags.txt"
+I removed git-tags.txt from the diffutils directory with the command "rm git-tags.txt"
+
+I changed to my working directory with "cd .."
+I opened the git-log.txt file using emacs.
+I found the commit entitled 
+"maint: quote 'like this' or "like this", not `like this'"
+The commit identifier was 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f
+Then, I reentered the diffutils directory with "cd diffutils"
+I used the command "git diff 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f &>quote-patch.txt"
+This command created a patch for this commit named quote-patch.txt
+I copied the file using the command "cp quote-patch.txt ../quote-patch.txt"
+Then, I removed the file from the diffutils directory using "rm quote-patch.txt"
+
+Once again, I changed to the working directory with "cd .."
+I opened the file git-log.txt with emacs.
+I found the commit identifier for version 3.0 is 022cd5c5eb647a22a4daa5fe5cbc10af6d5a1112
+I entered the diffutils directory with the command "cd diffutils"
+I used the command "git checkout 022cd5c5eb647a22a4daa5fe5cbc10af6d5a1112"
+This command changed the diffutils directory to version 3.0
+This command also created a detached branch that was separate from master for 
+working on the commit
+I copied the file quote-patch.txt into the diffutils directory with the command
+ "cp ../quote-patch.txt quote-patch.txt"
+
+I used the command "patch -p0 <quote-patch.txt"
+That caused the files to not be found, because it still included the 
+placeholder directory names.
+Then, I used the command "patch -p1 <quote-patch.txt"
+This command found the right files.
+Many hunks of the patch failed, and several files were not found, because they 
+did not exist.
+Also, a previous patch was found, so the system asked if I wanted to revert 
+the changes. I did not revert the changes, but the patch failed to change those
+ files anyway.
+I used the command "git status"
+This showed the files that changed compared to before the patch.
+Many files were modified, a few diff files were deleted, and a lot of rej and 
+orig files were created.
+
+I made a lot of changes and then realized I made the patch file incorrectly.
+I made the patch file for turning the quote commit into the current master.
+I removed the old directory and copied the original diffutils directory into a 
+new directory named diffutils.
+I entered the diffutils directory and used this command to make the patch file:
+"git diff 022cd5c5eb647a22a4daa5fe5cbc10af6d5a1112 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f &>quote-patch.txt"
+This created a patch file from version 3.0 to the quote commit.
+I copied the file to my working directory with the command 
+"cp quote-patch.txt ../quote-patch.txt"
+Then, I removed quote-patch.txt from diffutils with "rm quote-patch.txt"
+I changed to version 3.0 with the command "git checkout 022cd5c5eb647a22a4daa5fe5cbc10af6d5a1112"
+I copied the patch to the diffutils directory with the command 
+"cp ../quote-patch.txt quote-patch.txt"
+Then, I ran the command "patch -p1 <quote-patch.txt"
+Only one file failed the patch this time, because "gnulib is not a regular file"
+
+I checked the changes using "git status".
+Many files were modified, some files were deleted, and a few files were added.
+The delted files are not supposed to be missing, so I exited to my working 
+directory using the command "cd .."
+In my working directory, I created another copy of diffutils named shiv with 
+the command "cp -r ~eggert/src/gnu/diffutils shiv"
+I entered the shiv directory using the command "cd shiv"
+I changed to version 3.0 with the command "git checkout 022cd5c5eb647a22a4daa5fe5cbc10af6d5a1112"
+I returned to the working directory with the command "cd .."
+I copied the missing files from shiv to diffutils.
+
+I entered the diffutils directory with the command "cd diffutils"
+I used the "git status" command to make sure there were no deleted files.
+Then, I removed the files gnulib.rej, HACKING, and quote-patch.txt, since they 
+were not originally in version 3.0
+After that, I opened each file in the diffutils directory with emacs and used 
+the vc-diff command (C-x v =) to check for changes.
+None of the files in the diffutils directory should change, since none of them 
+were .c files, so any changes were reverted with the vc-revert command (C-x v u)
+After reverting files, I used the command "git status" to make sure the regular
+ files in the diffutils directory were unchanged compared to version 3.0
+
+I entered the doc directory with the command "cd doc"
+I removed the file diffutils.texi, because it was not in version 3.0
+I opened each file in the doc directory with emacs and used the vc-diff command
+(C-x v =) to check for changes.
+None of the files in the doc directory should change, since none of them were 
+.c files, so any changes were reverted with the vc-revert command (C-x v u)
+
+I returned to the diffutils directory with the command "cd .."
+The .git directory keeps track of the changes to the git repository, so I did 
+not check the .git directory.
+The git status command showed that no files in the gl, gnulib, or gnulib-tests 
+directories were changed by the patch.
+I entered the lib directory with the command "cd lib"
+I opened the file cmpbuf.c and used the vc-diff command to see the changes.
+None of the changes changed the output, so I reverted them with vc-revert.
+I opened the file cmpbuf.h and used the vc-diff command to see the changes.
+None of the changes changed the output, so I reverted them with vc-revert.
+I opened the file Makefile.am and used the vc-diff command to see the changes.
+None of the changes changed the output, so I reverted them with vc-revert.
+I opened the file prepargs.c and used the vc-diff command to see the changes.
+None of the changes changed the output, so I reverted them with vc-revert.
+I opened the file prepargs.h and used the vc-diff command to see the changes.
+There were no changes to that file.
+
+I returned to the diffutils directory with the command "cd .."
+I entered the m4 directory with the command "cd m4"
+I opened the file vararrays.m4 and used the vc-diff command to see the changes.
+Since the file is not a .c file, I reverted the changes with vc-revert.
+
+I returned to the diffutils directory with the command "cd .."
+I entered the man directory with the command "cd man"
+Since cmp.x, diff.x, diff3.x, help2man, and sdiff.x are not in version 3.0, I 
+removed them from the directory.
+I opened the file Makefile.am and used the vc-diff command to see the changes.
+Since the file is not a .c file, I reverted the changes with vc-revert.
+
+I returned to the diffutils directory with the command "cd .."
+I entered the ms directory with the command "cd ms"
+I opened each file in the ms directory with emacs and used the vc-diff command
+(C-x v =) to check for changes.
+None of the files in the ms directory should change, since none of them were 
+.c files, so any changes were reverted with the vc-revert command (C-x v u)
+
+I returned to the diffutils directory with the command "cd .."
+I entered the po directory with the command "cd po"
+I opened each file in the po directory with emacs and used the vc-diff command
+(C-x v =) to check for changes.
+None of the files in the po directory should change, since none of them were 
+.c files, so any changes were reverted with the vc-revert command (C-x v u)
+
+I returned to the diffutils directory with the command "cd .."
+I entered the src directory with the command "cd src"
+I opened the file analyze.c using emacs and used the vc-diff command.
+None of the changes changed output strings, so I reverted them with vc-revert.
+I opened the file cmp.c using emacs and used the vc-diff command.
+Some of the changes changed the output strings, but some of them did not.
+To undo the changes that did not change the output string, I reversed the 
+direction of the vc-diff with the command "R"
+Then, I went to the non-string changes and used the diff-apply-hunk command 
+(C-c C-a) to undo them.
+Some of the non-string changes were in the same hunk as the string changes, so 
+I had to undo those changes manually.
+
+I returned to the diffutils directory with the command "cd .."
+I entered the tests directory with the command "cd tests"
+I removed the files colliding-file-names, excess-slash, and no-dereference, 
+because they were not in version 3.0
+I opened each file in the po directory with emacs and used the vc-diff command
+(C-x v =) to check for changes.
+None of the files in the po directory should change, since none of them were 
+.c files, so any changes were reverted with the vc-revert command (C-x v u)
+
+I returned to the diffutils directory with the command "cd .."
+I used the command "git status"
+There were six modified .c files from the src directory.
+I used the command "git diff &>quote-3.0-patch.txt" to put the differences into
+ a patch file.
+I copied the patch to my working directory with the command 
+"cp quote-3.0-patch.txt ../quote-3.0-patch.txt"
+I removed the patch with the command "rm quote-3.0-patch.txt"
+I exited to my working directory with the command "cd .."
+I made a copy of the diffutils directory with the command 
+"cp -r diffutils dalmia"
+That was a backup in case the build went horribly wrong.
+
+I reentered the diffutils directory with the command "cd diffutils"
+I ran the command "./bootstrap"
+Then, I downloaded a patch with the command 
+"wget http://web.cs.ucla.edu/classes/spring19/cs35L/assign/diffutils-gets.diff"
+Then, I ran the command "patch -p0 <diffutils-gets.diff"
+The patch worked.
+I ran the command "./configure"
+The command succeeded.
+I ran the command "make"
+The command succeeded.
+I ran the command "make check"
+There were errors in the tests.
+
+I entered the src directory with the command "cd src"
+Then, I ran the command "./diff . -"
+That command causes an error to be thrown, which should have ' quotation marks.
+As expected, the quotation marks were both '
+After that, I ran the command "./diff --help"
+This command displays the help message from diff.
+As expected, all the quotation marks were '
+
+I exited to my working directory with the command "cd ../.."
+Conveniently, the shiv directory already has the original version 3.0 to 
+compare the modified version.
+I renamed shiv to diffutils-3.0 with the command "mv shiv diffutils-3.0"
+I also renamed diffutils to diffutils-3.0-patch with the command 
+"mv diffutils diffutils-3.0-patch"
+Then, I ran the command 
+"diffutils-3.0-patch/src/diff -pru diffutils-3.0 diffutils-3.0-patch >quote-3.0-test.txt"
+I ran the command "diff quote-3.0-test.txt quote-3.0-patch.txt"
+A lot of differences came up, because I used the built version of diffutils.
+
+Fortunately, I made a copy of the unbuilt version called dalmia.
+I renamed diffutils-3.0-patch to shiv with the command 
+"mv diffutils-3.0-patch shiv"
+I renamed dalmia to diffutils-3.0-patch with the command 
+"mv dalmia diffutils-3.0-patch"
+Then, I ran the command 
+"shiv/src/diff -pru diffutils-3.0 diffutils-3.0-patch >quote-3.0-test.txt"
+I ran the command "diff -u quote-3.0-test.txt quote-3.0-patch.txt >changes.diff"
+I opened the changes.diff file with emacs.
+There were several differences between the files, but they appeared to be 
+differences in format between the diff commands, which would not affect the 
+functionality of the program.
+
+Out of curiosity, I used git clone to copy the diffutils repository with the 
+command "git clone ~eggert/src/gnu/diffutils diffutils"
+I used cp to copy the diffutils repository using the command 
+"cp -r ~eggert/src/gnu/diffutils diffutils2"
+Then, I compared the differences with the command "diff -r diffutils diffutils2"
+
+The only differences between the two directories were in the .git directory, so
+ the differences would not reflect in any of the git patches.
+The changes were mainly to change the source file from which to track, which 
+should not affect the result of my actions, since I did not use any commands 
+that pulled from the source file other than the initial copying.
+The local history of the .git repository was also updated, but that did not 
+affect the commands I ran.
+Another change was adding the --bool tag to git config, which should not affect
+ my commands, because I did not use the hooks.allowonascii config.
+The last change was using the cat command rather than the echo command to 
+output the same output, which does not change the functionality of the patch.

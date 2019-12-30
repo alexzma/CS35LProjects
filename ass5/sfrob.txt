@@ -1,0 +1,304 @@
+I made a program called sfrobu that allocates memory all at once for input file
+s.
+After allocating the memory for the file, it reads the file byte by byte until
+it reaches the end of the file, allocating more memory if needed.
+
+Then, I created files with zero, 100, 10000, and 1000000 lines, each with 1 cha
+racter, and then I frobnicated them.
+
+Then, I timed the original sfrob and the sfrobu programs with those files as in
+put.
+sfrob with 0 lines:
+real time: 0.002 seconds
+user time: 0.000 seconds
+system time: 0.001 seconds
+
+sfrobu with 0 lines:
+real time: 0.002 seconds
+user time: 0.001 seconds
+system time: 0.000 seconds
+
+sfrob with 100 lines:
+real time: 0.002 seconds
+user time: 0.001 seconds
+system time: 0.001 seconds
+
+sfrobu with 100 lines:
+real time: 0.002 seconds
+user time: 0.000 seconds
+system time: 0.002 seconds
+
+sfrob with 10000 lines:
+real time: 0.055 seconds
+user time: 0.052 seconds
+system time: 0.001 seconds
+
+sfrobu with 10000 lines:
+real time: 0.033 seconds
+user time: 0.012 seconds
+system time: 0.020 seconds
+
+sfrob with 1000000 lines:
+real time: 15.901 seconds
+user time: 14.910 seconds
+system time: 0.086 seconds
+
+sfrobu with 1000000 lines:
+real time: 4.049 seconds
+user time: 2.017 seconds
+system time: 2.018 seconds
+
+The sfrobu program in general has a slower system time, but a faster user time,
+ compared to sfrob.
+Also, as the number of lines increased, the sfrobu program became more efficien
+t than the sfrob program. This is because the sfrob program reallocates memory
+for every byte in the file, while the sfrobu program only allocates memory once
+. This makes the sfrobu program more efficient when there are more bytes of mem
+ory to allocate.
+
+After that, I changed the sfrob program to print out the number of comparison
+s rather than the sorted input.
+I recompiled sfrob and ran the files through the program again.
+With 0 lines, there were zero comparisons.
+With 100 lines, there were 549 comparisons.
+With 10000 lines, there were 121469 comparisons.
+With 1000000 lines, there were 18823876 comparisons.
+Plotting the lines to the comparisons on a graph showed that the relation betwe
+en lines and the number of comparisons is approximately Nlog2(N) comparisons pe
+r line.
+
+I changed the sfrob program back to its original form and recompiled it.
+Then, I tested the sfrob, sfrobu, and sfrobs programs with and without the -f t
+ags on the files with 0, 100, 10000, and 1000000 lines mentioned earlier.
+The outputs were printed to the terminal, and the times for the programs were:
+
+sfrob with 0 lines:
+real time: 0.002 seconds
+user time: 0.000 seconds
+system time: 0.001 seconds
+
+sfrobu with 0 lines:
+real time: 0.002 seconds
+user time: 0.000 seconds
+system time: 0.001 seconds
+
+sfrobs with 0 lines:
+real time: 0.008 seconds
+user time: 0.002 seconds
+system time: 0.005 seconds
+
+sfrobu -f with 0 lines:
+real time: 0.002 seconds
+user time: 0.000 seconds
+system time: 0.001 seconds
+
+sfrobs -f with 0 lines:
+real time: 0.006 seconds
+user time: 0.000 seconds
+system time: 0.007 seconds
+
+sfrob with 100 lines:
+real time: 0.002 seconds
+user time: 0.001 seconds
+system time: 0.001 seconds
+
+sfrobu with 100 lines:
+real time: 0.002 seconds
+user time: 0.001 seconds
+system time: 0.000 seconds
+
+sfrobs with 100 lines:
+real time: 0.006 seconds
+user time: 0.004 seconds
+system time: 0.004 seconds
+
+sfrobu -f with 100 lines:
+real time: 0.004 seconds
+user time: 0.001 seconds
+system time: 0.001 seconds
+
+sfrobs -f with 100 lines:
+real time: 0.006 seconds
+user time: 0.006 seconds
+system time: 0.001 seconds
+
+sfrob with 10000 lines:
+real time: 0.053 seconds
+user time: 0.050 seconds
+system time: 0.002 seconds
+
+sfrobu with 10000 lines:
+real time: 0.034 seconds
+user time: 0.010 seconds
+system time: 0.022 seconds
+
+sfrobs with 10000 lines:
+real time: 0.009 seconds
+user time: 0.006 seconds
+system time: 0.004 seconds
+
+sfrobu -f with 10000 lines:
+real time: 0.035 seconds
+user time: 0.010 seconds
+system time: 0.024 seconds
+
+sfrobs -f with 10000 lines:
+real time: 0.014 seconds
+user time: 0.007 seconds
+system time: 0.005 seconds
+
+sfrob with 1000000 lines:
+real time: 15.383 seconds
+user time: 14.999 seconds
+system time: 0.093 seconds
+
+sfrobu with 1000000 lines:
+real time: 4.006 seconds
+user time: 2.028 seconds
+system time: 1.962 seconds
+
+sfrobs with 1000000 lines:
+real time: 0.469 seconds
+user time: 0.307 seconds
+system time: 0.040 seconds
+
+sfrobu -f with 1000000 lines:
+real time: 4.363 seconds
+user time: 2.390 seconds
+system time: 1.958 seconds
+
+sfrobs -f with 1000000 lines:
+real time: 0.666 seconds
+user time: 0.481 seconds
+system time: 0.046 seconds
+
+The programs with the -f tag were always slower than the corresponding programs
+ without the -f tag when processing the same file.
+With 0 lines, the sfrob and sfrobu programs were similar in efficiency to each
+other, and more efficient than the sfrobs program.
+With 100 lines, the sfrob and sfrobu programs were still similar in efficiency
+to each other, and more efficient than the sfrobs program.
+With 10000 lines, the sfrobs program was significantly more efficent than the s
+frob and sfrobu programs. The sfrobu program was significantly more efficient t
+han the sfrob program.
+With 1000000 lines, the sfrobs program was significantly more efficient than th
+e sfrob and sfrobu programs. The sfrobu program was significantly more efficien
+t than the sfrob program.
+
+The previous times were with the files as standard input. Now, I used cat to pu
+t the files into standard output, and piped that output into my programs.
+The resulting times were:
+
+sfrob with 0 lines:
+real time: 0.003 seconds
+user time: 0.002 seconds
+system time: 0.001 seconds
+
+sfrobu with 0 lines:
+real time: 0.002 seconds
+user time: 0.000 seconds
+system time: 0.003 seconds
+
+sfrobs with 0 lines:
+real time: 0.005 seconds
+user time: 0.005 seconds
+system time: 0.003 seconds
+
+sfrobu -f with 0 lines:
+real time: 0.002 seconds
+user time: 0.000 seconds
+system time: 0.003 seconds
+
+sfrobs -f with 0 lines:
+real time: 0.005 seconds
+user time: 0.000 seconds
+system time: 0.009 seconds
+
+sfrob with 100 lines:
+real time: 0.004 seconds
+user time: 0.001 seconds
+system time: 0.002 seconds
+
+sfrobu with 100 lines:
+real time: 0.003 seconds
+user time: 0.000 seconds
+system time: 0.003 seconds
+
+sfrobs with 100 lines:
+real time: 0.005 seconds
+user time: 0.002 seconds
+system time: 0.006 seconds
+
+sfrobu -f with 100 lines:
+real time: 0.013 seconds
+user time: 0.000 seconds
+system time: 0.004 seconds
+
+sfrobs -f with 100 lines:
+real time: 0.005 seconds
+user time: 0.004 seconds
+system time: 0.005 seconds
+
+sfrob with 10000 lines:
+real time: 0.054 seconds
+user time: 0.051 seconds
+system time: 0.003 seconds
+
+sfrobu with 10000 lines:
+real time: 0.088 seconds
+user time: 0.056 seconds
+system time: 0.033 seconds
+
+sfrobs with 10000 lines:
+real time: 0.009 seconds
+user time: 0.004 seconds
+system time: 0.008 seconds
+
+sfrobu -f with 10000 lines:
+real time: 0.104 seconds
+user time: 0.074 seconds
+system time: 0.031 seconds
+
+sfrobs -f with 10000 lines:
+real time: 0.009 seconds
+user time: 0.007 seconds
+system time: 0.005 seconds
+
+sfrob with 1000000 lines:
+real time: 14.942 seconds
+user time: 14.775 seconds
+system time: 0.084 seconds
+
+sfrobu with 1000000 lines:
+real time: 18.402 seconds
+user time: 15.225 seconds
+system time: 3.184 seconds
+
+sfrobs with 1000000 lines:
+real time: 0.470 seconds
+user time: 0.309 seconds
+system time: 0.041 seconds
+
+sfrobu -f with 1000000 lines:
+real time: 23.053 seconds
+user time: 19.895 seconds
+system time: 3.162 seconds
+
+sfrobs -f with 1000000 lines:
+real time: 0.783 seconds
+user time: 0.486 seconds
+system time: 0.045 seconds
+
+Like before, the programs with the -f tag were slower than the corresponding pr
+ograms without the -f tag when processing the same files.
+With 0 and 100 lines, the sfrob and sfrobu programs were similarly efficent, an
+d were more efficient than the sfrobs program.
+With 10000 lines, the sfrobs program was the most efficient, and sfrobu was the
+ least efficient.
+With 1000000 lines, the sfrobs program was the most efficient, and sfrobu was t
+he least efficient.
+
+The sfrobu program becomes less efficient when taking input not directly from a
+ file, because it only allocates all the memory at once when the input is a re
+gular file. When the input is not a regular file, sfrobu must allocate the memo
+ry every time a new byte is read, which is less efficient than all at once.

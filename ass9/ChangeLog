@@ -1,0 +1,11 @@
+maint: quote 'like this' or "like this", not `like this'
+
+* src/cmp.c (try_help, specify_ignore_initial, usage, main):
+* src/diff.c (main, try_help, option_help_msgid, specify_value)
+(compare_files):
+* src/diff3.c (main, try_help, option_help_msgid, usage)
+(read_diff):
+* src/dir.c (comare_names):
+* src/sdiff.c (try_help, usage, check_child_status, main):
+* src/util.c (finish_output):
+ Quote 'like this' in output.
