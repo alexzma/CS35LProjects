@@ -2,7 +2,7 @@
 Projects from CS35L (Software Construction Laboratory) <br />
 This repo is for inspiration only. Copying is forbidden.
 
-#Assignment Descriptions
+# Assignment Descriptions
 Assignment 2 <br />
 Create shell scripts to check the spelling of Hawaiian words and to check the validity of file names. <br />
 <br />
@@ -28,7 +28,7 @@ Assignment 9 <br />
 Use git to change an old version of a program and make a patch to it. <br />
 <br />
 
-#Scores
+# Scores
 Assignment 2: 84.28/100 <br />
 Assignment 3: 89.33/100 <br />
 Assignment 4: 100/100 <br />
